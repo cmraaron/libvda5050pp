@@ -1,0 +1,5 @@
+@PACKAGE_INIT@
+
+find_package(PahoMqttCpp REQUIRED)
+
+include ( "${CMAKE_CURRENT_LIST_DIR}/mqtt_connectorTargets.cmake" )

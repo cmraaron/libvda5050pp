@@ -1,0 +1,13 @@
+site_name: libvda5050++
+repo_url: https://gitlab.cc-asp.fraunhofer.de/silicon-economy/services/odyn/vda5050/libvda5050pp
+theme:
+    name: mkdocs
+    highlightjs: true
+    hljs_style: github
+nav:
+    - Home: index.md
+    - Install: install.md
+    - Build: build.md
+    - Quickstart: quickstart.md
+    - Extra: extra.md
+    - API: doxygen/html/index.html

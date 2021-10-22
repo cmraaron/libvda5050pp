@@ -1,0 +1,232 @@
+image: registry.gitlab.cc-asp.fraunhofer.de/iml/oe130/software/mars/docker/mars2-base-image:focal-latest
+
+stages:
+  - "Build"
+  - "Test"
+  - "Code-Analysis"
+  - "Documentation"
+
+before_script:
+  - echo "Writing .ssh/id_ed25519 private keyfile and setting up .ssh/known_hosts for FhG's GitLab server..."
+  - mkdir -p ~/.ssh
+  - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+  - "command -v ssh-agent >/dev/null || ( apt-get update -yq && apt-get install openssh-client -yq )" # ensure that ssh-agent is installed ...
+  - eval $(ssh-agent -s) # ... and running
+  - echo "$CI_CD_KEY" | base64 -d > ~/.ssh/id_ed25519 # construct private keyfile from masked key
+    # Note: The key/content of $CI_CD_KEY was extracted from a locally generated pair (of type ED25519) at ~/.ssh/id_ed25519
+    #       by the following command: cat ~/.ssh/id_ed25519 | base64 -w0
+    #       to get rid of newlines in order to be able to make it a MASKED variable in the GitLab web interface. "base64 -d"
+    #       then performs the decoding. The corresponding public key has been added for the dependency (library) to
+    #       https://gitlab.cc-asp.fraunhofer.de/silicon-economy/services/odyn/vda5050/simpleptn/-/settings/repository under "Deploy keys".
+  - chmod 600 ~/.ssh/id_ed25519
+  # cat ~/.ssh/id_ed25519  | ssh-add - # add the private ssh key
+
+build_debug:
+  stage: "Build"
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+    GIT_DEPTH: 0
+  script:
+    - source /opt/ros/noetic/setup.bash >/dev/null
+    - /usr/bin/cmake --no-warn-unused-cli -DSimplePTN_URL:STRING=git@gitlab.cc-asp.fraunhofer.de:silicon-economy/services/odyn/vda5050/simpleptn.git -DCI_ENABLE_ALL:BOOL=TRUE -DLIBVDA5050PP_SPTN_DEP_LOCAL:BOOL=FALSE -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_C_COMPILER:FILEPATH=/bin/clang-10 -DCMAKE_CXX_COMPILER:FILEPATH=/bin/clang++-10 -H/builds/silicon-economy/services/odyn/vda5050/libvda5050pp -B/builds/silicon-economy/services/odyn/vda5050/libvda5050pp/build -G "Unix Makefiles"
+    - /usr/bin/cmake --build /builds/silicon-economy/services/odyn/vda5050/libvda5050pp/build --config Debug --target all -- -j 14
+  artifacts:
+    when: always
+    paths:
+      - build/
+      - docs/
+    expire_in: 1 week
+  tags:
+    - intranet
+  rules:
+    - if: ($CI_COMMIT_BRANCH == "main") || ($CI_COMMIT_BRANCH == "dev")
+      allow_failure: false
+    # "Default clause" meaning: in all other cases
+    - when: on_success
+      allow_failure: true
+
+build_release:
+  stage: "Build"
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+    GIT_DEPTH: 0
+  script:
+    - source /opt/ros/noetic/setup.bash >/dev/null
+    - /usr/bin/cmake --no-warn-unused-cli -DSimplePTN_URL:STRING=git@gitlab.cc-asp.fraunhofer.de:silicon-economy/services/odyn/vda5050/simpleptn.git -DCI_ENABLE_ALL:BOOL=TRUE -DLIBVDA5050PP_SPTN_DEP_LOCAL:BOOL=FALSE -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_C_COMPILER:FILEPATH=/bin/clang-10 -DCMAKE_CXX_COMPILER:FILEPATH=/bin/clang++-10 -H/builds/silicon-economy/services/odyn/vda5050/libvda5050pp -B/builds/silicon-economy/services/odyn/vda5050/libvda5050pp/build -G "Unix Makefiles"
+    - /usr/bin/cmake --build /builds/silicon-economy/services/odyn/vda5050/libvda5050pp/build --config Release --target all -- -j 14
+  artifacts:
+    paths:
+      - build/
+      - docs/
+    expire_in: 1 week
+  tags:
+    - intranet
+  rules:
+    - if: ($CI_COMMIT_BRANCH == "main") || ($CI_COMMIT_BRANCH == "dev")
+      allow_failure: false
+    # "Default clause" meaning: in all other cases
+    - when: on_success
+      allow_failure: true
+
+unittest:
+  stage: "Test"
+  dependencies:
+    - "build_debug"
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+    GIT_DEPTH: 0
+  script:
+    - cd ./build
+    - ctest --output-on-failure -O ctest.txt
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - build/ctest.txt
+    expire_in: 1 week
+  tags:
+    - intranet
+  rules:
+    - if: ($CI_COMMIT_BRANCH == "main") || ($CI_COMMIT_BRANCH == "dev")
+      allow_failure: false
+    # "Default clause" meaning: in all other cases
+    - when: on_success
+      allow_failure: true
+
+sonarqube:
+  stage: "Test"
+  # image: sonarsource/sonar-scanner-cli
+  dependencies:
+    - "build_debug"
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+    GIT_DEPTH: 0
+  before_script:
+    - echo "Writing .ssh/id_ed25519 private keyfile and setting up .ssh/known_hosts for FhG's GitLab server..."
+    - mkdir -p ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - "command -v ssh-agent >/dev/null || ( apt-get update -yq && apt-get install openssh-client -yq )" # ensure that ssh-agent is installed ...
+    - eval $(ssh-agent -s) # ... and running
+    - echo "$CI_CD_KEY" | base64 -d > ~/.ssh/id_ed25519 # construct private keyfile from masked key
+      # Note: The key/content of $CI_CD_KEY was extracted from a locally generated pair (of type ED25519) at ~/.ssh/id_ed25519
+      #       by the following command: cat ~/.ssh/id_ed25519 | base64 -w0
+      #       to get rid of newlines in order to be able to make it a MASKED variable in the GitLab web interface. "base64 -d"
+      #       then performs the decoding. The corresponding public key has been added for the dependency (library) to
+      #       https://gitlab.cc-asp.fraunhofer.de/silicon-economy/services/odyn/vda5050/simpleptn/-/settings/repository under "Deploy keys".
+    - chmod 600 ~/.ssh/id_ed25519
+    # cat ~/.ssh/id_ed25519  | ssh-add - # add the private ssh key
+    # Sonar does not work properly if there is no blame information, this ensures a complete history
+    - source /opt/ros/noetic/setup.bash >/dev/null
+    - source /catkin_ws/devel/setup.bash >/dev/null
+    - git fetch --unshallow || true
+    - cd /builds/silicon-economy/services/odyn/vda5050/libvda5050pp
+    - wget $SONAR_HOST_URL/static/cpp/build-wrapper-linux-x86.zip
+    - unzip -j build-wrapper-linux-x86.zip
+    - mkdir build_wrapper_output_directory
+    - ./build-wrapper-linux-x86-64 --out-dir build_wrapper_output_directory /usr/bin/cmake --build /builds/silicon-economy/services/odyn/vda5050/libvda5050pp/build --config Debug --clean-first --target all -- -j 14
+  script:
+    - PATH=$PATH:/sonar-scanner-4.6.2.2472-linux/bin
+    - cd /builds/silicon-economy/services/odyn/vda5050/libvda5050pp/build/test
+    - ./vda5050++_test
+    - llvm-profdata merge -sparse default.profraw -o coverage.profdata
+    - llvm-cov show ./vda5050++_test -instr-profile=coverage.profdata > coverage.txt
+    - cd /builds/silicon-economy/services/odyn/vda5050/libvda5050pp
+    - sonar-scanner
+      -Dsonar.projectKey=odyn.navsim.libvda5050pp
+      -Dsonar.projectName=odyn.navsim.libvda5050pp
+      -Dsonar.cfamily.build-wrapper-output=build_wrapper_output_directory
+      -Dsonar.host.url=$SONAR_HOST_URL
+      -Dsonar.login=$SONAR_TOKEN
+      -Dsonar.sourceEncoding=UTF-8
+      -Dsonar.cfamily.threads=1
+      -Dsonar.cfamily.cache.enabled=false
+      -Dsonar.cfamily.llvm-cov.reportPath=/builds/silicon-economy/services/odyn/vda5050/libvda5050pp/build/test/coverage.txt
+      -Dsonar.qualitygate.wait=true
+      -Dsonar.sources=extra,include,src
+      -Dsonar.tests=test
+  rules:
+    # Sonar analysis must succeed (i.e. the quality gate must be passed) in main and MRs
+    - if: ($CI_COMMIT_BRANCH == "main") || $CI_MERGE_REQUEST_IID
+      allow_failure: false
+    # "Default clause" meaning: in all other cases
+    - when: on_success
+      allow_failure: true
+  cache:
+    key: "sonar-${CI_PROJECT_ID}"
+    paths:
+      - ".scannerwork"
+      - ".sonar"
+
+cppcheck:
+  stage: "Code-Analysis"
+  dependencies:
+    - "build_debug"
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+    GIT_DEPTH: 0
+  script:
+    - cppcheck --xml --enable=all --project=./build/compile_commands.json 2> cppcheck.xml
+  after_script:
+    - cppcheck-codequality --input-file=cppcheck.xml --output-file=cppcheck.json
+  artifacts:
+    when: always
+    reports:
+      codequality:
+        - cppcheck.json
+    expire_in: 1 week
+  tags:
+    - intranet
+  # rules:
+  # - if: ($CI_COMMIT_BRANCH == "main")
+  #   allow_failure: false
+  # # "Default clause" meaning: in all other cases
+  # - when: on_success
+  #   allow_failure: true
+  # Allow until SELE compliant configuration is available
+  allow_failure: true
+
+clang-tidy:
+  stage: "Code-Analysis"
+  dependencies:
+    - "build_debug"
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+    GIT_DEPTH: 0
+  script:
+    - cd ./build
+    - run-clang-tidy -export-fixes ../clang_tidy_results.yml
+  artifacts:
+    when: on_failure
+    paths:
+      - clang_tidy_results.yml
+    expire_in: 1 week
+  tags:
+    - intranet
+  # rules:
+  # - if: ($CI_COMMIT_BRANCH == "main")
+  #   allow_failure: false
+  # # "Default clause" meaning: in all other cases
+  # - when: on_success
+  #   allow_failure: true
+  # Allow until SELE compliant configuration is available
+  allow_failure: true
+
+pages:
+  stage: "Documentation"
+  dependencies:
+    - "build_debug"
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+    GIT_DEPTH: 0
+  script:
+    - source /opt/ros/noetic/setup.bash >/dev/null
+    - source /catkin_ws/devel/setup.bash >/dev/null
+    - cd ./build
+    - make mkdocs
+    - mv site/ ../public/
+  artifacts:
+    paths:
+      - public
+  tags:
+    - intranet
+  allow_failure: false

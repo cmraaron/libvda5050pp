@@ -1,0 +1,9 @@
+@PACKAGE_INIT@
+
+find_package(SimplePTN)
+find_package(Threads)
+include ( "${CMAKE_CURRENT_LIST_DIR}/libvda5050++BaseTargets.cmake" )
+
+foreach(component ${@PROJECT_NAME@_FIND_COMPONENTS})
+    include(${CMAKE_CURRENT_LIST_DIR}/${component}-config.cmake)
+endforeach()

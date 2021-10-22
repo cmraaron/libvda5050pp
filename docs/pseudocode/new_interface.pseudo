@@ -1,0 +1,103 @@
+class MyContinuousNavigationHandler extends vda5050pp::interface_agv::ContinuousNavigationHandler {
+  void ~MyContinuousNavigationHandler() override {
+    AGV.cleanup()
+  }
+
+  void start(Node[] base_nodes, Edge[] base_edges) override {
+    AGV.prepare(base_nodes)
+    AGV.onFailure(lambda this.failed())
+    AGV.onStarted(lambda this.started())
+    AGV.onDrivingChanged(lambda this.paused() or this.resumed())
+
+    // either
+    AGV.positionChanged(lambda this.setPosition())
+    // or
+    AGV.nodeReached(lambda this.setNodeReached())
+
+
+    AGV.navigate(nodes)
+  }
+
+  void horizonUpdated(Node[] new_horizon_nodes, Edge[] new_horizon_edges) override {
+    base_nodes = this.getBase()
+    AGV.clearExcept(base_nodes)
+    AGV.prepare(new_horizon_nodes)
+  }
+
+  void baseIncreased(Node[] base_append_nodes, Edge[] base_append_edges) override {
+    AGV.navigate(base_append_nodes)
+  }
+
+  void pause() override {
+    AGV.pause()
+  }
+
+  void resume() override {
+    AGV.resume()
+  }
+
+  void stop() override {
+    AGV.onStopped(lambda this.stopped)
+    AGV.stop()
+  }
+}
+
+class MyActionHandler extends vda5050pp::interface_agv::ActionHandler {
+  void ~MyActionHandler override {
+    AGV.cleanup()
+  }
+
+  void start() override {
+    action = this.getAction()
+    AGV.prepare(action)
+    AGV.onStarted(lambda this.started())
+    AGV.onResumed(lambda this.resumed())
+    AGV.onPaused(lambda this.paused())
+    AGV.onStopped(lambda this.stopped())
+    AGV.onFailure(lambda this.failed())
+    AGV.onFinished(lambda this.finished())
+    AGV.start(action)
+  }
+
+  void pause() override {
+    action = this.getAction()
+    AGV.pause(action)
+  }
+
+  void resume() override {
+    action = this.getAction()
+    AGV.resume(action)
+  }
+
+  void stop() override {
+    action = this.getAction()
+    AGV.resume(action)
+  }
+}
+
+
+main() {
+  Handle library_handle( description
+                       , connector
+                       , logger
+                       , Handles<MyContinuousNavigationHandler, MyActionHandler>{});
+  library_handle.spin();
+}  
+
+main2() {
+  Handle library_handle( description
+                       , connector
+                       , logger
+                       , Handles<MyContinuousNavigationHandler, MyActionHandler>{});
+  while (running) {
+    if (library_handle.canSpin()) {
+      library_handle.trySpin();
+    }
+
+    if (AGV.hasEvent()) {
+      // Battery status, safety status ...
+      event = AGV.getEvent()
+      vda5050pp::interface_agv::topic::setter(library_handle, event)
+    }
+  }
+}  

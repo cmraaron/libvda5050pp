@@ -1,0 +1,48 @@
+// 
+// Graph:
+//
+// (n0) >-e1-> (n2) >-e3-> (n4) >-e5-> (n6)
+//              |           |
+//              |-a1:NONE   |-a2:HARD
+//
+//
+// Task order:
+//
+//   Driving 1:
+//     (n0) >-e1-> (n2) >-e3-> (n4)
+// 
+//   Action 1:
+//     triggered on n2
+//
+//   Action 2:
+//     triggered on n4
+//
+//   Driving 2:
+//     triggered after a2
+//     (n4) >-e5-> (n6)
+
+
+void initializeActionCallback(InitializeActionHandle handle):
+  action = handle.getAction()
+  AGV.execute(action)
+  AGV.onFailed(handle.failed)
+  AGV.onSuccess(handle.success)
+
+void driveSubgraphCallback(DriveSubgraphHandle handle):
+  nodes = handle.getNodes()
+  AGV.follow(nodes)
+
+  AGV.onFailed(handle.failed)
+  handle.onNewNodes(AGV.insertNode)
+
+  // either
+  AGV.onPositionChanged(handle.setPosition)
+  // or
+  AGV.onNodeReached(handle.setNodeReached)
+
+void main():
+  LibraryHandle lh()
+  lh.setActionInterface(interface)
+  lh.setDriveSubgraphCallback(driveSubgraphCallback)
+  lh.setInitializeActionCallback(initializeActionCallback)
+  
