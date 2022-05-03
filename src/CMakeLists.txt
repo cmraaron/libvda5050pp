@@ -35,6 +35,7 @@ add_library(vda5050++ SHARED
   ${PROJECT_SOURCE_DIR}/src/vda5050++/interface_agv/continuous_navigation_handler.cpp
   ${PROJECT_SOURCE_DIR}/src/vda5050++/interface_agv/handle.cpp
   ${PROJECT_SOURCE_DIR}/src/vda5050++/interface_agv/logger.cpp
+  ${PROJECT_SOURCE_DIR}/src/vda5050++/interface_agv/odometry_handler.cpp
   ${PROJECT_SOURCE_DIR}/src/vda5050++/interface_agv/pause_resume_handler.cpp
   ${PROJECT_SOURCE_DIR}/src/vda5050++/interface_agv/status/battery.cpp
   ${PROJECT_SOURCE_DIR}/src/vda5050++/interface_agv/status/loads.cpp
