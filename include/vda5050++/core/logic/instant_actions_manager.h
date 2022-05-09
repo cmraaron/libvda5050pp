@@ -29,6 +29,8 @@ private:
   vda5050pp::interface_agv::Handle &handle_;
   NetManager &net_manager_;
 
+  void doInitPosition(const vda5050pp::Action &action) noexcept(true);
+
 public:
   InstantActionsManager(vda5050pp::interface_agv::Handle &handle,
                         NetManager &net_manager) noexcept(true);
