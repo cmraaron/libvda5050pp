@@ -39,6 +39,11 @@ private:
   vda5050pp::core::common::InterruptableTimer visualization_timer_;
 
 public:
+  class InitializePositionError : public std::runtime_error {
+  public:
+    InitializePositionError(const std::string &msg) noexcept(true);
+  };
+
   class NotAttachedError : public std::logic_error {
   public:
     NotAttachedError() noexcept(true);
@@ -48,11 +53,14 @@ public:
 
   ///
   ///\brief This function is called, when a initializePosition
-  /// instant actions was received
+  /// instant actions was received. When this function returns, a successful initialization
+  /// is indicated. If an Exception is thrown, the exception::what member function indicates
+  /// an error.
   ///
   ///\param pos the AGVPosition told by the MC
+  ///\throws InitializePositionError
   ///
-  virtual void initializePosition(const vda5050pp::AGVPosition &pos) = 0;
+  virtual void initializePosition(const vda5050pp::AGVPosition &pos) noexcept(false) = 0;
 
   ///
   ///\brief Set the current AGVPosition (only for visualization purposes)

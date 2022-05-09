@@ -10,6 +10,10 @@ void OdometryHandler::setHandleRef(Handle &handle) noexcept(true) { this->handle
 OdometryHandler::NotAttachedError::NotAttachedError() noexcept(true)
     : std::logic_error("OdometryHandler was not attached to the library handle") {}
 
+OdometryHandler::InitializePositionError::InitializePositionError(const std::string &msg) noexcept(
+    true)
+    : std::runtime_error(msg) {}
+
 void OdometryHandler::setAGVPosition(const vda5050pp::AGVPosition &pos) noexcept(false) {
   if (this->handle_ptr_ == nullptr) {
     throw NotAttachedError();
