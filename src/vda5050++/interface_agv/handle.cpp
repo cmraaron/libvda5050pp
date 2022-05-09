@@ -113,6 +113,14 @@ void Handle::shutdown() noexcept(true) {
   }
 }
 
+void Handle::setOdometryHandler(
+    std::shared_ptr<vda5050pp::interface_agv::OdometryHandler> handler) noexcept(true) {
+  this->odometry_handler_ = handler;
+  if (this->odometry_handler_ != nullptr) {
+    this->odometry_handler_->setHandleRef(*this);
+  }
+}
+
 // Spinner /////////////////////////////////////////////////////////////////////
 
 void Handle::Spinner::spin() {

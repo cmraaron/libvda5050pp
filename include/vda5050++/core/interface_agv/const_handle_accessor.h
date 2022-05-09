@@ -109,6 +109,14 @@ public:
   ///\return std::chrono::system_clock::duration the state update period
   ///
   std::chrono::system_clock::duration getStateUpdatePeriod() const noexcept(true);
+
+  ///
+  ///\brief Get a shared_ptr to the currently set OdometryHandler
+  ///
+  ///\return std::shared_ptr<vda5050pp::interface_agv::OdometryHandler>
+  ///
+  std::shared_ptr<vda5050pp::interface_agv::OdometryHandler> getOdometryHandler() const
+      noexcept(true);
 };
 
 }  // namespace vda5050pp::core::interface_agv
