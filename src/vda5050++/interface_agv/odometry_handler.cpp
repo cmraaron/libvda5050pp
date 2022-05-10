@@ -76,3 +76,5 @@ void OdometryHandler::disableAutomaticVisualizationMessages() noexcept(true) {
     this->visualization_thread_->join();
   }
 }
+
+bool OdometryHandler::isAttached() const noexcept(true) { return this->handle_ptr_ != nullptr; }

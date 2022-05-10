@@ -91,6 +91,13 @@ public:
   ///\brief If the visualization thread is running, stop it.
   ///
   void disableAutomaticVisualizationMessages() noexcept(true);
+
+  ///
+  ///\brief Check if the OdometryHandler was attached to the library Handle
+  ///
+  ///\return is attached?
+  ///
+  bool isAttached() const noexcept(true);
 };
 
 }  // namespace vda5050pp::interface_agv
