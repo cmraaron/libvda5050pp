@@ -24,7 +24,7 @@ void OdometryHandler::setAGVPosition(const vda5050pp::AGVPosition &pos) noexcept
   ha.getState().setAGVPosition(pos);
 }
 
-OdometryHandler::~OdometryHandler() { this->disableAutomaticVelocityMessages(); }
+OdometryHandler::~OdometryHandler() { this->disableAutomaticVisualizationMessages(); }
 
 void OdometryHandler::setVelocity(const vda5050pp::Velocity &vel) noexcept(false) {
   if (this->handle_ptr_ == nullptr) {
@@ -36,13 +36,13 @@ void OdometryHandler::setVelocity(const vda5050pp::Velocity &vel) noexcept(false
   ha.getState().setVelocity(vel);
 }
 
-void OdometryHandler::enableAutomaticVelocityMessages(
+void OdometryHandler::enableAutomaticVisualizationMessages(
     std::chrono::system_clock::duration period) noexcept(false) {
   if (this->handle_ptr_ == nullptr) {
     throw NotAttachedError();
   }
 
-  this->disableAutomaticVelocityMessages();
+  this->disableAutomaticVisualizationMessages();
 
   auto vis_task = [this, period] {
     auto running = true;
@@ -70,7 +70,7 @@ void OdometryHandler::enableAutomaticVelocityMessages(
   this->visualization_timer_.enable();
   this->visualization_thread_ = std::make_unique<std::thread>(vis_task);
 }
-void OdometryHandler::disableAutomaticVelocityMessages() noexcept(true) {
+void OdometryHandler::disableAutomaticVisualizationMessages() noexcept(true) {
   this->visualization_timer_.disable();
   if (this->visualization_thread_ != nullptr) {
     this->visualization_thread_->join();

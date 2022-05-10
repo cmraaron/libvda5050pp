@@ -84,12 +84,13 @@ public:
   ///
   ///\param period the message rate period
   ///
-  void enableAutomaticVelocityMessages(std::chrono::system_clock::duration period) noexcept(false);
+  void enableAutomaticVisualizationMessages(std::chrono::system_clock::duration period) noexcept(
+      false);
 
   ///
   ///\brief If the visualization thread is running, stop it.
   ///
-  void disableAutomaticVelocityMessages() noexcept(true);
+  void disableAutomaticVisualizationMessages() noexcept(true);
 };
 
 }  // namespace vda5050pp::interface_agv
