@@ -60,7 +60,9 @@ void InstantActionsManager::doInitPosition(const vda5050pp::Action &action) noex
     auto odom_handler = ha.getOdometryHandler();
     if (odom_handler == nullptr) {
       ha.getLogger().logWarn("No OdometryHandler set, dropping initPosition Action.");
-      vda5050pp::Error err;
+      ha.getState().setActionStatus(aid, vda5050pp::ActionStatus::FAILED);
+      ha.getMessages().requestStateUpdate(vda5050pp::core::messages::UpdateUrgency::k_high);
+      return;
     }
 
     try {
