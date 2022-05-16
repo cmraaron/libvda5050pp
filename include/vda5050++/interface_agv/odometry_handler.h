@@ -41,7 +41,7 @@ private:
 public:
   class InitializePositionError : public std::runtime_error {
   public:
-    InitializePositionError(const std::string &msg) noexcept(true);
+    explicit InitializePositionError(const std::string &msg) noexcept(true);
   };
 
   class NotAttachedError : public std::logic_error {
