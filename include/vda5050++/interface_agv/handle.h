@@ -25,6 +25,7 @@
 #include "vda5050++/interface_agv/agv_description/agv_description.h"
 #include "vda5050++/interface_agv/continuous_navigation_handler.h"
 #include "vda5050++/interface_agv/logger.h"
+#include "vda5050++/interface_agv/odometry_handler.h"
 #include "vda5050++/interface_agv/pause_resume_handler.h"
 #include "vda5050++/interface_agv/step_based_navigation_handler.h"
 #include "vda5050++/interface_mc/connector.h"
@@ -208,6 +209,9 @@ public:
   ///
   void shutdown() noexcept(true);
 
+  void setOdometryHandler(
+      std::shared_ptr<vda5050pp::interface_agv::OdometryHandler> handler) noexcept(true);
+
   ///
   ///\brief get a constref to the current AGV description
   ///
@@ -240,6 +244,8 @@ private:
 
   ///\brief if the library connector is passive, this will point to connector_ too
   std::shared_ptr<vda5050pp::interface_mc::ConnectorPassive> connector_passive_;
+
+  std::shared_ptr<vda5050pp::interface_agv::OdometryHandler> odometry_handler_;
 
   ///\brief period of automatic state updates
   std::chrono::system_clock::duration state_update_period_;

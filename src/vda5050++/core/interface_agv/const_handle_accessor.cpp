@@ -59,3 +59,8 @@ bool ConstHandleAccessor::isContinuousNavigation() const noexcept(true) {
 bool ConstHandleAccessor::isStepBasedNavigation() const noexcept(true) {
   return this->handle_.create_navigate_to_node_handler_ != nullptr;
 }
+
+std::shared_ptr<vda5050pp::interface_agv::OdometryHandler> ConstHandleAccessor::getOdometryHandler()
+    const noexcept(true) {
+  return this->handle_.odometry_handler_;
+}
