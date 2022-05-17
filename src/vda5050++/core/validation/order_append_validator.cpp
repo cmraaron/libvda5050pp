@@ -19,16 +19,19 @@ std::list<vda5050pp::Error> OrderAppendValidator::operator()(const vda5050pp::Or
   vda5050pp::core::interface_agv::HandleAccessor ha(this->handle_);
   auto &state = ha.getState();
 
-  bool may_not_append = false;
-
   // Do not validate non-appending orders
   if (order.orderId == state.getOrderId() && order.orderUpdateId <= state.getOrderUpdateId()) {
     return {};
   }
 
-  // The Order may not append
-  if (state.isIdle()) {
-    may_not_append = true;
+  // The Order may replace
+  bool may_replace = state.isIdle();
+
+  if (!may_replace && order.orderId != state.getOrderId()) {
+    return {{"OrderIDError",
+             {{{"order.orderId", order.orderId}, {"state.orderId", state.getOrderId()}}},
+             "Order ID does not match the current (unfinished) one",
+             ErrorLevel::WARNING}};
   }
 
   // This case will not be checked here
@@ -43,7 +46,7 @@ std::list<vda5050pp::Error> OrderAppendValidator::operator()(const vda5050pp::Or
   bool appends = state.getGraphBaseSeqId() == min_seq;
 
   // Only allow direct appending
-  auto ok = appends || (may_not_append && min_seq == 0);
+  auto ok = appends || (may_replace && min_seq == 0);
   if (!ok) {
     return {{"OrderStitchingError",
              {{{"order.orderId", order.orderId},

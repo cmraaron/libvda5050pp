@@ -135,7 +135,9 @@ TEST_CASE("core::validation - OrderAppendValidator", "[core][validation]") {
            test::mkEdge("e3", 5, true, "n3", "n4", {})}};
       auto ret = validator(new_order);
       test::dumpErrors(handle_accessor, ret);
-      THEN("No error is returned") { REQUIRE(ret.empty()); }
+      THEN("An error is returned") {
+        REQUIRE_FALSE(ret.empty());
+      }  // new behaviour (reject on different id)
     }
 
     WHEN("A validator validates an order with redundant elements") {
