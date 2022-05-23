@@ -21,7 +21,9 @@ public:
 
   bool hasLastInitPosition() const;
 
-  void unblockInitializePositionCall();
+  void blockFutureInitializePositionCalls() noexcept(true);
+
+  void unblockInitializePositionCalls() noexcept(true);
 };
 
 }  // namespace test

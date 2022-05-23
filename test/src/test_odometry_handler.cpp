@@ -4,7 +4,6 @@ void test::OdometryHandler::initializePosition(const vda5050pp::AGVPosition &pos
   this->last_init_position_ = pos;
 
   std::unique_lock lock(this->barrier_mutex_);
-  this->barrier_active_ = true;
   this->barrier_.wait(lock, [this] { return !this->barrier_active_; });
 }
 
@@ -16,7 +15,12 @@ bool test::OdometryHandler::hasLastInitPosition() const {
   return this->last_init_position_.has_value();
 }
 
-void test::OdometryHandler::unblockInitializePositionCall() {
+void test::OdometryHandler::blockFutureInitializePositionCalls() noexcept(true) {
+  std::unique_lock lock(this->barrier_mutex_);
+  this->barrier_active_ = true;
+}
+
+void test::OdometryHandler::unblockInitializePositionCalls() noexcept(true) {
   {
     std::unique_lock lock(this->barrier_mutex_);
     this->barrier_active_ = false;

@@ -35,6 +35,7 @@ TEST_CASE("core::logic - initPosition behaviour", "[core][logic][action][initPos
 
     auto odom_handler = std::make_shared<test::OdometryHandler>();
     handle.setOdometryHandler(odom_handler);
+    handle.spinParallel(2);
 
     vda5050pp::Action init_position;
     init_position.actionId = "a1";
@@ -52,15 +53,15 @@ TEST_CASE("core::logic - initPosition behaviour", "[core][logic][action][initPos
 
     WHEN("The initPosition instant action is received") {
       using namespace std::chrono_literals;
+      odom_handler->blockFutureInitializePositionCalls();
       connector->receiveInstantActions(init_position_instant_action);
-      handle.spinParallel(2);
       std::this_thread::sleep_for(200ms);
 
       WHEN("The initPosition call has not returned, yet") {
         testActionStatus(handle, "a1", vda5050pp::ActionStatus::RUNNING);
         WHEN("The initPosition call has returned") {
-          odom_handler->unblockInitializePositionCall();
-          std::this_thread::sleep_for(100ms);
+          odom_handler->unblockInitializePositionCalls();
+          std::this_thread::sleep_for(200ms);
           testActionStatus(handle, "a1", vda5050pp::ActionStatus::FINISHED);
         }
       }
@@ -72,7 +73,7 @@ TEST_CASE("core::logic - initPosition behaviour", "[core][logic][action][initPos
         REQUIRE(odom_handler->lastInitPosition().theta == -1);
         REQUIRE(odom_handler->lastInitPosition().mapId == "testMap");
       }
-      odom_handler->unblockInitializePositionCall();
+      odom_handler->unblockInitializePositionCalls();
     }
   }
 }
