@@ -72,6 +72,7 @@ TEST_CASE("vda5050pp::core::common::InterruptableTimer - interruptAll", "[thread
     WHEN("interruptAll() was called") {
       std::this_thread::sleep_for(100ms);
       timer.interruptAll();
+      timer.waitForClearance();
       THEN("each thread returned") {
         REQUIRE(ret1);
         REQUIRE(ret2);
