@@ -23,6 +23,7 @@ add_executable(vda5050++_test
   ${PROJECT_SOURCE_DIR}/test/src/test_action_handler.cpp
   ${PROJECT_SOURCE_DIR}/test/src/test_connector.cpp
   ${PROJECT_SOURCE_DIR}/test/src/test_continuous_navigation_handler.cpp
+  ${PROJECT_SOURCE_DIR}/test/src/test_odometry_handler.cpp
   ${PROJECT_SOURCE_DIR}/test/src/test_pause_resume_handler.cpp
   ${PROJECT_SOURCE_DIR}/test/src/test_step_based_navigation_handler.cpp
   ${PROJECT_SOURCE_DIR}/test/vda5050++/core/common/blocking_queue.cpp
@@ -33,6 +34,7 @@ add_executable(vda5050++_test
   ${PROJECT_SOURCE_DIR}/test/vda5050++/core/logic/action_manager.cpp
   ${PROJECT_SOURCE_DIR}/test/vda5050++/core/logic/combined_tests.cpp
   ${PROJECT_SOURCE_DIR}/test/vda5050++/core/logic/continuous_navigation.cpp
+  ${PROJECT_SOURCE_DIR}/test/vda5050++/core/logic/init_position.cpp
   ${PROJECT_SOURCE_DIR}/test/vda5050++/core/logic/net_manager.cpp
   ${PROJECT_SOURCE_DIR}/test/vda5050++/core/logic/parallel_launch_net.cpp
   ${PROJECT_SOURCE_DIR}/test/vda5050++/core/logic/sync_net.cpp

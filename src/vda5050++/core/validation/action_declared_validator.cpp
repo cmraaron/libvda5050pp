@@ -7,6 +7,7 @@
 #include "vda5050++/core/validation/action_declared_validator.h"
 
 #include <algorithm>
+#include <limits>
 #include <optional>
 #include <sstream>
 #include <string>
@@ -16,10 +17,19 @@
 
 static const std::string k_description = "Check if the Action was declared in the AGV description";
 
-static const std::set<vda5050pp::interface_agv::agv_description::ActionDeclaration>
-    k_control_action_declarations{
-        {"startPause", {}, {}, {vda5050pp::BlockingType::NONE}, true, false, false},
-        {"stopPause", {}, {}, {vda5050pp::BlockingType::NONE}, true, false, false},
+const auto k_ser_float64_min =
+    vda5050pp::interface_agv::agv_description::SerializedValue(std::numeric_limits<double>::min());
+
+const auto k_ser_float64_max =
+    vda5050pp::interface_agv::agv_description::SerializedValue(std::numeric_limits<double>::max());
+
+///
+/// \brief The set of all control actions
+///
+const std::set<vda5050pp::interface_agv::agv_description::ActionDeclaration>
+    k_control_action_declarations = {
+        {"startPause", {}, {}, {vda5050pp::BlockingType::HARD}, true, false, false},
+        {"stopPause", {}, {}, {vda5050pp::BlockingType::HARD}, true, false, false},
         {"stateRequest", {}, {}, {vda5050pp::BlockingType::NONE}, true, false, false},
         {"logReport",
          {{"reason", std::nullopt, std::nullopt, std::nullopt}},
@@ -28,8 +38,19 @@ static const std::set<vda5050pp::interface_agv::agv_description::ActionDeclarati
          true,
          false,
          false},
-        {"cancelOrder", {}, {}, {vda5050pp::BlockingType::NONE}, true, false, false},
-    };
+        {"cancelOrder", {}, {}, {vda5050pp::BlockingType::HARD}, true, false, false},
+        {"initPosition",
+         {{"x", k_ser_float64_min, k_ser_float64_max, std::nullopt},
+          {"y", k_ser_float64_min, k_ser_float64_max, std::nullopt},
+          {"theta", k_ser_float64_min, k_ser_float64_max, std::nullopt},
+          {"mapId", std::nullopt, std::nullopt, std::nullopt},
+          {"lastNodeId", std::nullopt, std::nullopt, std::nullopt}},
+         {},
+         {vda5050pp::BlockingType::HARD},
+         true,
+         false,
+         false},
+};
 
 vda5050pp::core::validation::ActionDeclaredValidator::ActionDeclaredValidator(
     vda5050pp::interface_agv::Handle &handle, bool ctxt_edge, bool ctxt_instant, bool ctxt_node)

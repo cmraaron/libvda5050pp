@@ -122,3 +122,8 @@ const vda5050pp::interface_agv::agv_description::AGVDescription &HandleAccessor:
 std::chrono::system_clock::duration HandleAccessor::getStateUpdatePeriod() const noexcept(true) {
   return this->handle_.state_update_period_;
 }
+
+std::shared_ptr<vda5050pp::interface_agv::OdometryHandler> HandleAccessor::getOdometryHandler()
+    const noexcept(true) {
+  return this->handle_.odometry_handler_;
+}
