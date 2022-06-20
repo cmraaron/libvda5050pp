@@ -78,7 +78,7 @@ std::list<vda5050pp::Error> OrderReachableValidator::operator()(
   vda5050pp::Error error;
   error.errorDescription = "First Node of the Order is not trivially reachable";
   error.errorLevel = vda5050pp::ErrorLevel::WARNING;
-  error.errorType = "OrderError";
+  error.errorType = "noRouteError";
   error.errorReferences = {{"node.nodeId", first_node.nodeId}, {"node.sequenceId", "0"}};
   return {error};
 }

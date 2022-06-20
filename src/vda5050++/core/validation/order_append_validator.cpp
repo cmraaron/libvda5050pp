@@ -48,7 +48,7 @@ std::list<vda5050pp::Error> OrderAppendValidator::operator()(const vda5050pp::Or
   // Only allow direct appending
   auto ok = appends || (may_replace && min_seq == 0);
   if (!ok) {
-    return {{"OrderStitchingError",
+    return {{"orderUpdateError",
              {{{"order.orderId", order.orderId},
                {"order.orderUpdateId", std::to_string(order.orderUpdateId)},
                {"order.node.sequenceId", std::to_string(order_first_node_it->sequenceId)},
