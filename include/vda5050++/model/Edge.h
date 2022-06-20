@@ -17,6 +17,7 @@
 #include <vector>
 
 #include "vda5050++/model/Action.h"
+#include "vda5050++/model/OrientationType.h"
 #include "vda5050++/model/Trajectory.h"
 
 namespace vda5050pp {
@@ -73,6 +74,12 @@ struct Edge {
   /// and the orientation field here is defined, apply the
   /// orientation to the tangent of the trajectory.
   std::optional<double> orientation;
+
+  /// Enum {GLOBAL, TANGENTIAL}
+  /// "GLOBAL"- relative to the global project specific map coordinate system
+  /// "TANGENTIAL"- tangential to the edge.
+  /// If not defined, the default value is "TANGENTIAL".
+  OrientationType orientationType = OrientationType::TANGENTIAL;
 
   /// Sets direction at junctions for line-guided or wire-guided
   /// vehicles, to be defined initially (vehicle individual).
