@@ -87,7 +87,7 @@ endif()
 if (SimplePTN_FOUND)
         message(STATUS "Found SimplePTN installation.")
 else()
-    set(SimplePTN_URL "git@git.openlogisticsfoundation.org:silicon-economy/libraries/vda5050/simpleptn.git"
+    set(SimplePTN_URL "https://git.openlogisticsfoundation.org/silicon-economy/libraries/vda5050/simpleptn.git"
         CACHE STRING "Overwrite the SimplePTN repo URL")
     cpmaddpackage( NAME SimplePTN
         GIT_REPOSITORY ${SimplePTN_URL}
