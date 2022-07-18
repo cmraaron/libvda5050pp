@@ -652,12 +652,16 @@ void from_json(const json &j, BoundingBoxReference &d) {
 }
 
 void to_json(json &j, const LoadDimensions &d) {
-  j["height"] = d.height;
+  if (d.height.has_value()) {
+    j["height"] = *d.height;
+  }
   j["width"] = d.width;
   j["length"] = d.length;
 }
 void from_json(const json &j, LoadDimensions &d) {
-  d.height = j.at("height");
+  if (j.contains("height")) {
+    d.height = j.at("height");
+  }
   d.width = j.at("width");
   d.length = j.at("length");
 }
