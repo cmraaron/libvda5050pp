@@ -566,7 +566,7 @@ uint32_t StateManager::getOrderUpdateId() const noexcept(true) {
 
 bool StateManager::getPausedState() const noexcept(true) {
   auto lock = this->state_.acquireShared();
-  return this->state_.state.paused;
+  return this->state_.state.paused.value_or(false);
 }
 
 void StateManager::setPausedState(bool paused) noexcept(true) {

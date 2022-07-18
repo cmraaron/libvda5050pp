@@ -95,7 +95,7 @@ struct State {
   /// of a physical button on the AGV or because of an instantAction.
   /// The AGV can resume the order.
   /// False: The AGV is currently not in a paused state
-  bool paused;
+  std::optional<bool> paused;
 
   /// True: AGV is almost at the end of the base and will reduce
   /// speed if no new base is transmitted. Trigger for MC to

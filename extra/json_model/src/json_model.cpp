@@ -758,7 +758,9 @@ void to_json(json &j, const State &d) {
   j["operatingMode"] = d.operatingMode;
   j["orderId"] = d.orderId;
   j["orderUpdateId"] = d.orderUpdateId;
-  j["paused"] = d.paused;
+  if (d.paused.has_value()) {
+    j["paused"] = *d.paused;
+  }
   j["safetyState"] = d.safetyState;
   if (d.velocity.has_value()) {
     j["velocity"] = *d.velocity;
@@ -793,7 +795,9 @@ void from_json(const json &j, State &d) {
   d.operatingMode = j.at("operatingMode");
   d.orderId = j.at("orderId");
   d.orderUpdateId = j.at("orderUpdateId");
-  d.paused = j.at("paused");
+  if (j.contains("paused")) {
+    d.paused = j.at("paused");
+  }
   d.safetyState = j.at("safetyState");
   if (j.contains("velocity")) {
     d.velocity = j.at("velocity");
