@@ -188,7 +188,9 @@ void to_json(json &j, const Action &d) {
     j["actionDescription"] = *d.actionDescription;
   }
   j["actionId"] = d.actionId;
-  j["actionParameters"] = d.actionParameters;
+  if (d.actionParameters.has_value()) {
+    j["actionParameters"] = *d.actionParameters;
+  }
   j["actionType"] = d.actionType;
   j["blockingType"] = d.blockingType;
 }
@@ -197,7 +199,9 @@ void from_json(const json &j, Action &d) {
     d.actionDescription = j.at("actionDescription");
   }
   d.actionId = j.at("actionId");
-  d.actionParameters = j.at("actionParameters").get<std::vector<ActionParameter>>();
+  if (j.contains("actionParameters")) {
+    d.actionParameters = j.at("actionParameters").get<std::vector<ActionParameter>>();
+  }
   d.actionType = j.at("actionType");
   d.blockingType = j.at("blockingType");
 }
