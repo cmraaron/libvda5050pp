@@ -468,17 +468,29 @@ void from_json(const json &j, ActionState &d) {
 
 void to_json(json &j, const BatteryState &d) {
   j["batteryCharge"] = d.batteryCharge;
-  j["batteryHealth"] = d.batteryHealth;
-  j["batteryVoltage"] = d.batteryVoltage;
+  if (d.batteryHealth.has_value()) {
+    j["batteryHealth"] = *d.batteryHealth;
+  }
+  if (d.batteryVoltage.has_value()) {
+    j["batteryVoltage"] = *d.batteryVoltage;
+  }
   j["charging"] = d.charging;
-  j["reach"] = d.reach;
+  if (d.reach.has_value()) {
+    j["reach"] = *d.reach;
+  }
 }
 void from_json(const json &j, BatteryState &d) {
   d.batteryCharge = j.at("batteryCharge");
-  d.batteryHealth = j.at("batteryHealth");
-  d.batteryVoltage = j.at("batteryVoltage");
+  if (j.contains("batteryHealth")) {
+    d.batteryHealth = j.at("batteryHealth");
+  }
+  if (j.contains("batteryVoltage")) {
+    d.batteryVoltage = j.at("batteryVoltage");
+  }
   d.charging = j.at("charging");
-  d.reach = j.at("reach");
+  if (j.contains("reach")) {
+    d.reach = j.at("reach");
+  }
 }
 
 void to_json(json &j, const EdgeState &d) {

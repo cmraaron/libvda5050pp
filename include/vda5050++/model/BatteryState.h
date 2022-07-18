@@ -12,6 +12,7 @@
 #define INCLUDE_VDA5050_2B_2B_MODEL_BATTERYSTATE
 
 #include <cstdint>
+#include <optional>
 
 namespace vda5050pp {
 /// VD(M)A 5050 BatteryState
@@ -21,11 +22,11 @@ struct BatteryState {
   double batteryCharge;
 
   /// [V] Battery Voltage
-  double batteryVoltage;
+  std::optional<double> batteryVoltage;
 
   /// [%] Range: [0 ... 100]
   /// State of Health
-  int8_t batteryHealth;
+  std::optional<int8_t> batteryHealth;
 
   /// True: charging in progress
   /// False: AGV is currently not charging
@@ -33,7 +34,7 @@ struct BatteryState {
 
   /// [m] Range: [0.0 ... ∞)
   /// Estimated reach with current Stage of Charge
-  uint32_t reach;
+  std::optional<uint32_t> reach;
 
   constexpr bool operator==(const BatteryState &other) const {
     if (batteryCharge != other.batteryCharge) return false;
