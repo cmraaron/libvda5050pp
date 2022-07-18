@@ -84,7 +84,7 @@ struct State {
   /// array out of the state. If the AGV can determine the load
   /// state, but the array is empty, the AGV is considered
   /// unloaded.
-  std::vector<Load> loads;
+  std::optional<std::vector<Load>> loads;
 
   /// True: indicates that the AGV is driving and/or rotating. Other
   /// movements of the AGV (e.g. lift movements) are not included here.

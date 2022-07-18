@@ -164,21 +164,21 @@ public:
   void unsetVelocity() noexcept(true);
 
   ///
-  /// \brief Add a load
+  /// \brief Add a load (enables state.loads)
   ///
   /// \param load load
   ///
   void addLoad(const vda5050pp::Load &load) noexcept(true);
 
   ///
-  /// \brief Remove a load with a certain id
+  /// \brief Remove a load with a certain id (enables state.loads)
   ///
   /// \param load_id the id of the load to remove
   ///
   void removeLoad(const std::string &load_id) noexcept(true);
 
   ///
-  /// \brief The exact load object to remove
+  /// \brief The exact load object to remove (enables state.loads)
   ///
   /// \param load the load to remove
   ///
@@ -198,7 +198,12 @@ public:
   ///
   /// \return std::vector<vda5050pp::Load>
   ///
-  std::vector<vda5050pp::Load> getLoads() const noexcept(true);
+  std::optional<std::vector<vda5050pp::Load>> getLoads() const noexcept(true);
+
+  ///
+  ///\brief Unset the loads field from the vda5050 state.
+  ///
+  void unsetLoads() noexcept(true);
 
   ///
   /// \brief Set the Driving status

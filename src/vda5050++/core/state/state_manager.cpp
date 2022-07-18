@@ -301,49 +301,70 @@ void StateManager::unsetVelocity() noexcept(true) {
 
 void StateManager::addLoad(const vda5050pp::Load &load) noexcept(true) {
   auto lock = this->state_.acquire();
-  this->state_.state.loads.push_back(load);
+  if (!this->state_.state.loads.has_value()) {
+    this->state_.state.loads = std::make_optional<std::vector<vda5050pp::Load>>({});
+  }
+  this->state_.state.loads->push_back(load);
 }
 
 void StateManager::removeLoad(const std::string &load_id) noexcept(true) {
   auto lock = this->state_.acquire();
 
+  if (!this->state_.state.loads.has_value()) {
+    this->state_.state.loads = std::make_optional<std::vector<vda5050pp::Load>>({});
+  }
+
   auto match_load_id = [&load_id](const vda5050pp::Load &load) { return load.loadId == load_id; };
 
-  auto it =
-      std::remove_if(begin(this->state_.state.loads), end(this->state_.state.loads), match_load_id);
+  auto it = std::remove_if(begin(*this->state_.state.loads), end(*this->state_.state.loads),
+                           match_load_id);
 
-  this->state_.state.loads.erase(it);
+  this->state_.state.loads->erase(it);
 }
 
 void StateManager::removeLoad(const vda5050pp::Load &load) noexcept(true) {
   auto lock = this->state_.acquire();
 
-  auto it = std::remove(begin(this->state_.state.loads), end(this->state_.state.loads), load);
+  if (!this->state_.state.loads.has_value()) {
+    this->state_.state.loads = std::make_optional<std::vector<vda5050pp::Load>>({});
+  }
 
-  this->state_.state.loads.erase(it);
+  auto it = std::remove(begin(*this->state_.state.loads), end(*this->state_.state.loads), load);
+
+  this->state_.state.loads->erase(it);
 }
 
 vda5050pp::Load StateManager::getLoad(const std::string &load_id) const noexcept(false) {
   auto lock = this->state_.acquireShared();
 
+  if (!this->state_.state.loads.has_value()) {
+    throw std::invalid_argument("No load with id: " + load_id);
+  }
+
   auto match_load_id = [&load_id](const vda5050pp::Load &l) {
     return l.loadId.has_value() && *l.loadId == load_id;
   };
 
-  auto it =
-      std::find_if(cbegin(this->state_.state.loads), cend(this->state_.state.loads), match_load_id);
+  auto it = std::find_if(cbegin(*this->state_.state.loads), cend(*this->state_.state.loads),
+                         match_load_id);
 
-  if (it == cend(this->state_.state.loads)) {
+  if (it == cend(*this->state_.state.loads)) {
     throw std::invalid_argument("No load with id: " + load_id);
   }
 
   return *it;
 }
 
-std::vector<vda5050pp::Load> StateManager::getLoads() const noexcept(true) {
+std::optional<std::vector<vda5050pp::Load>> StateManager::getLoads() const noexcept(true) {
   auto lock = this->state_.acquireShared();
 
   return this->state_.state.loads;
+}
+
+void StateManager::unsetLoads() noexcept(true) {
+  auto lock = this->state_.acquireShared();
+
+  this->state_.state.loads.reset();
 }
 
 void StateManager::setDriving(bool driving) noexcept(true) {

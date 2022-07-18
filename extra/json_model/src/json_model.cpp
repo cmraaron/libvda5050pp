@@ -744,7 +744,9 @@ void to_json(json &j, const State &d) {
   j["informations"] = d.informations;
   j["lastNodeId"] = d.lastNodeId;
   j["lastNodeSequenceId"] = d.lastNodeSequenceId;
-  j["loads"] = d.loads;
+  if (d.loads.has_value()) {
+    j["loads"] = *d.loads;
+  }
   j["newBaseRequested"] = d.newBaseRequested;
   j["nodeStates"] = d.nodeStates;
   j["operatingMode"] = d.operatingMode;
@@ -775,7 +777,9 @@ void from_json(const json &j, State &d) {
   d.informations = j.at("informations").get<std::vector<Info>>();
   d.lastNodeId = j.at("lastNodeId");
   d.lastNodeSequenceId = j.at("lastNodeSequenceId");
-  d.loads = j.at("loads").get<std::vector<Load>>();
+  if (j.contains("loads")) {
+    d.loads = j.at("loads").get<std::vector<Load>>();
+  }
   d.newBaseRequested = j.at("newBaseRequested");
   d.nodeStates = j.at("nodeStates").get<std::vector<NodeState>>();
   d.operatingMode = j.at("operatingMode");
