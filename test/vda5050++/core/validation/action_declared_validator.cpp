@@ -197,9 +197,9 @@ TEST_CASE("core::validation::ActionDeclared - parameter check", "[core][validati
 
     WHEN("An action has an parameter inside of a value set") {
       vda5050pp::Action action1 = {
-          "pick", "id", std::nullopt, vda5050pp::BlockingType::HARD, {{"place", "front"}}};
+          "pick", "id", std::nullopt, vda5050pp::BlockingType::HARD, {{{"place", "front"}}}};
       vda5050pp::Action action2 = {
-          "pick", "id", std::nullopt, vda5050pp::BlockingType::HARD, {{"place", "rear"}}};
+          "pick", "id", std::nullopt, vda5050pp::BlockingType::HARD, {{{"place", "rear"}}}};
 
       auto res1 = validator(action1);
       auto res2 = validator(action2);
@@ -211,7 +211,7 @@ TEST_CASE("core::validation::ActionDeclared - parameter check", "[core][validati
 
     WHEN("An action has an parameter not inside of a value set") {
       vda5050pp::Action action = {
-          "pick", "id", std::nullopt, vda5050pp::BlockingType::HARD, {{"place", "outside"}}};
+          "pick", "id", std::nullopt, vda5050pp::BlockingType::HARD, {{{"place", "outside"}}}};
 
       auto res = validator(action);
       THEN("It is invalid") { REQUIRE_FALSE(res.empty()); }
@@ -226,7 +226,7 @@ TEST_CASE("core::validation::ActionDeclared - parameter check", "[core][validati
 
     WHEN("An action is missing an optional parameter") {
       vda5050pp::Action action = {
-          "honk", "id", std::nullopt, vda5050pp::BlockingType::NONE, {{"volume", "50"}}};
+          "honk", "id", std::nullopt, vda5050pp::BlockingType::NONE, {{{"volume", "50"}}}};
 
       auto res = validator(action);
       THEN("It is valid") { REQUIRE(res.empty()); }
@@ -234,13 +234,13 @@ TEST_CASE("core::validation::ActionDeclared - parameter check", "[core][validati
 
     WHEN("An action has a parameter value outside of the ordinal bounds") {
       vda5050pp::Action action1 = {
-          "honk", "id", std::nullopt, vda5050pp::BlockingType::NONE, {{"volume", "101"}}};
+          "honk", "id", std::nullopt, vda5050pp::BlockingType::NONE, {{{"volume", "101"}}}};
       vda5050pp::Action action2 = {
-          "honk", "id", std::nullopt, vda5050pp::BlockingType::NONE, {{"volume", "-1"}}};
+          "honk", "id", std::nullopt, vda5050pp::BlockingType::NONE, {{{"volume", "-1"}}}};
       vda5050pp::Action action3 = {
-          "ord_str", "id", std::nullopt, vda5050pp::BlockingType::NONE, {{"string", "AZ"}}};
+          "ord_str", "id", std::nullopt, vda5050pp::BlockingType::NONE, {{{"string", "AZ"}}}};
       vda5050pp::Action action4 = {
-          "ord_str", "id", std::nullopt, vda5050pp::BlockingType::NONE, {{"string", "01"}}};
+          "ord_str", "id", std::nullopt, vda5050pp::BlockingType::NONE, {{{"string", "01"}}}};
 
       auto res1 = validator(action1);
       auto res2 = validator(action2);
@@ -256,13 +256,13 @@ TEST_CASE("core::validation::ActionDeclared - parameter check", "[core][validati
 
     WHEN("An action has a parameter value inside of the ordinal bounds") {
       vda5050pp::Action action1 = {
-          "honk", "id", std::nullopt, vda5050pp::BlockingType::NONE, {{"volume", "100"}}};
+          "honk", "id", std::nullopt, vda5050pp::BlockingType::NONE, {{{"volume", "100"}}}};
       vda5050pp::Action action2 = {
-          "honk", "id", std::nullopt, vda5050pp::BlockingType::NONE, {{"volume", "0"}}};
+          "honk", "id", std::nullopt, vda5050pp::BlockingType::NONE, {{{"volume", "0"}}}};
       vda5050pp::Action action3 = {
-          "ord_str", "id", std::nullopt, vda5050pp::BlockingType::NONE, {{"string", "AB"}}};
+          "ord_str", "id", std::nullopt, vda5050pp::BlockingType::NONE, {{{"string", "AB"}}}};
       vda5050pp::Action action4 = {
-          "ord_str", "id", std::nullopt, vda5050pp::BlockingType::NONE, {{"string", "AM"}}};
+          "ord_str", "id", std::nullopt, vda5050pp::BlockingType::NONE, {{{"string", "AM"}}}};
 
       auto res1 = validator(action1);
       auto res2 = validator(action2);

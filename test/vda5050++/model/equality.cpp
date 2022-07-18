@@ -17,12 +17,12 @@ TEST_CASE("model::Action equality", "[vda5050pp::Action], [model/equality]") {
                             "id1",
                             std::nullopt,
                             vda5050pp::BlockingType::NONE,
-                            {{"key1", "false"}, {"key2", "true"}}};
+                            {{{"key1", "false"}, {"key2", "true"}}}};
     vda5050pp::Action a2 = {"t1",
                             "id1",
                             std::nullopt,
                             vda5050pp::BlockingType::NONE,
-                            {{"key1", "false"}, {"key3", "true"}}};
+                            {{{"key1", "false"}, {"key3", "true"}}}};
     vda5050pp::Action a3 = {"t2", "id3", std::nullopt, vda5050pp::BlockingType::NONE, {}};
 
     WHEN("Two equal actions are compared") {

@@ -84,7 +84,7 @@ struct State {
   /// array out of the state. If the AGV can determine the load
   /// state, but the array is empty, the AGV is considered
   /// unloaded.
-  std::vector<Load> loads;
+  std::optional<std::vector<Load>> loads;
 
   /// True: indicates that the AGV is driving and/or rotating. Other
   /// movements of the AGV (e.g. lift movements) are not included here.
@@ -95,13 +95,13 @@ struct State {
   /// of a physical button on the AGV or because of an instantAction.
   /// The AGV can resume the order.
   /// False: The AGV is currently not in a paused state
-  bool paused;
+  std::optional<bool> paused;
 
   /// True: AGV is almost at the end of the base and will reduce
   /// speed if no new base is transmitted. Trigger for MC to
   /// send new base.
   /// False: no base update required
-  bool newBaseRequested;
+  std::optional<bool> newBaseRequested;
 
   /// [m] Used by line guided vehicles to indicate the distance
   /// it has been driving past the „lastNodeIdId“.
@@ -122,7 +122,7 @@ struct State {
 
   /// Enum {automatic, semi-automatic, manual, service, teach-in}
   /// For additional information see chapter 6.11
-  std::optional<OperatingMode> operatingMode;
+  OperatingMode operatingMode;
 
   /// Array of error - objects. All active errors of the AGV
   /// should be in the list. An empty array indicates that the

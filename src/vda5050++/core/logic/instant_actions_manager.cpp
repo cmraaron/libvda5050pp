@@ -33,7 +33,7 @@ void InstantActionsManager::doInitPosition(const vda5050pp::Action &action) noex
   lastNodeId.type = vda5050pp::interface_agv::agv_description::Type::STRING;
 
   // All parameters are present, due to validation
-  for (const auto &param : action.actionParameters) {
+  for (const auto &param : *action.actionParameters) {
     if (param.key == "x") {
       x.value = param.value;
     } else if (param.key == "y") {
