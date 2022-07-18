@@ -101,7 +101,7 @@ struct State {
   /// speed if no new base is transmitted. Trigger for MC to
   /// send new base.
   /// False: no base update required
-  bool newBaseRequested;
+  std::optional<bool> newBaseRequested;
 
   /// [m] Used by line guided vehicles to indicate the distance
   /// it has been driving past the „lastNodeIdId“.

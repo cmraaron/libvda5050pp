@@ -747,7 +747,9 @@ void to_json(json &j, const State &d) {
   if (d.loads.has_value()) {
     j["loads"] = *d.loads;
   }
-  j["newBaseRequested"] = d.newBaseRequested;
+  if (d.newBaseRequested.has_value()) {
+    j["newBaseRequested"] = *d.newBaseRequested;
+  }
   j["nodeStates"] = d.nodeStates;
   j["operatingMode"] = d.operatingMode;
   j["orderId"] = d.orderId;
@@ -780,7 +782,9 @@ void from_json(const json &j, State &d) {
   if (j.contains("loads")) {
     d.loads = j.at("loads").get<std::vector<Load>>();
   }
-  d.newBaseRequested = j.at("newBaseRequested");
+  if (j.contains("newBaseRequested")) {
+    d.newBaseRequested = j.at("newBaseRequested");
+  }
   d.nodeStates = j.at("nodeStates").get<std::vector<NodeState>>();
   d.operatingMode = j.at("operatingMode");
   d.orderId = j.at("orderId");
