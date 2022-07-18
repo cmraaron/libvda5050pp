@@ -40,11 +40,12 @@ TEST_CASE("core::logic - initPosition behaviour", "[core][logic][action][initPos
     vda5050pp::Action init_position;
     init_position.actionId = "a1";
     init_position.actionType = "initPosition";
-    init_position.actionParameters.push_back({"x", "10"});
-    init_position.actionParameters.push_back({"y", "20"});
-    init_position.actionParameters.push_back({"theta", "-1"});
-    init_position.actionParameters.push_back({"mapId", "testMap"});
-    init_position.actionParameters.push_back({"lastNodeId", "n0"});
+    init_position.actionParameters = std::make_optional<std::vector<vda5050pp::ActionParameter>>();
+    init_position.actionParameters->push_back({"x", "10"});
+    init_position.actionParameters->push_back({"y", "20"});
+    init_position.actionParameters->push_back({"theta", "-1"});
+    init_position.actionParameters->push_back({"mapId", "testMap"});
+    init_position.actionParameters->push_back({"lastNodeId", "n0"});
     init_position.blockingType = vda5050pp::BlockingType::HARD;
     vda5050pp::InstantActions init_position_instant_action;
     init_position_instant_action.header.version = vda5050pp::core::version::current;

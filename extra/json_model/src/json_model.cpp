@@ -188,7 +188,9 @@ void to_json(json &j, const Action &d) {
     j["actionDescription"] = *d.actionDescription;
   }
   j["actionId"] = d.actionId;
-  j["actionParameters"] = d.actionParameters;
+  if (d.actionParameters.has_value()) {
+    j["actionParameters"] = *d.actionParameters;
+  }
   j["actionType"] = d.actionType;
   j["blockingType"] = d.blockingType;
 }
@@ -197,7 +199,9 @@ void from_json(const json &j, Action &d) {
     d.actionDescription = j.at("actionDescription");
   }
   d.actionId = j.at("actionId");
-  d.actionParameters = j.at("actionParameters").get<std::vector<ActionParameter>>();
+  if (j.contains("actionParameters")) {
+    d.actionParameters = j.at("actionParameters").get<std::vector<ActionParameter>>();
+  }
   d.actionType = j.at("actionType");
   d.blockingType = j.at("blockingType");
 }
@@ -468,17 +472,29 @@ void from_json(const json &j, ActionState &d) {
 
 void to_json(json &j, const BatteryState &d) {
   j["batteryCharge"] = d.batteryCharge;
-  j["batteryHealth"] = d.batteryHealth;
-  j["batteryVoltage"] = d.batteryVoltage;
+  if (d.batteryHealth.has_value()) {
+    j["batteryHealth"] = *d.batteryHealth;
+  }
+  if (d.batteryVoltage.has_value()) {
+    j["batteryVoltage"] = *d.batteryVoltage;
+  }
   j["charging"] = d.charging;
-  j["reach"] = d.reach;
+  if (d.reach.has_value()) {
+    j["reach"] = *d.reach;
+  }
 }
 void from_json(const json &j, BatteryState &d) {
   d.batteryCharge = j.at("batteryCharge");
-  d.batteryHealth = j.at("batteryHealth");
-  d.batteryVoltage = j.at("batteryVoltage");
+  if (j.contains("batteryHealth")) {
+    d.batteryHealth = j.at("batteryHealth");
+  }
+  if (j.contains("batteryVoltage")) {
+    d.batteryVoltage = j.at("batteryVoltage");
+  }
   d.charging = j.at("charging");
-  d.reach = j.at("reach");
+  if (j.contains("reach")) {
+    d.reach = j.at("reach");
+  }
 }
 
 void to_json(json &j, const EdgeState &d) {
@@ -652,12 +668,16 @@ void from_json(const json &j, BoundingBoxReference &d) {
 }
 
 void to_json(json &j, const LoadDimensions &d) {
-  j["height"] = d.height;
+  if (d.height.has_value()) {
+    j["height"] = *d.height;
+  }
   j["width"] = d.width;
   j["length"] = d.length;
 }
 void from_json(const json &j, LoadDimensions &d) {
-  d.height = j.at("height");
+  if (j.contains("height")) {
+    d.height = j.at("height");
+  }
   d.width = j.at("width");
   d.length = j.at("length");
 }
@@ -728,15 +748,19 @@ void to_json(json &j, const State &d) {
   j["informations"] = d.informations;
   j["lastNodeId"] = d.lastNodeId;
   j["lastNodeSequenceId"] = d.lastNodeSequenceId;
-  j["loads"] = d.loads;
-  j["newBaseRequested"] = d.newBaseRequested;
-  j["nodeStates"] = d.nodeStates;
-  if (d.operatingMode.has_value()) {
-    j["operatingMode"] = *d.operatingMode;
+  if (d.loads.has_value()) {
+    j["loads"] = *d.loads;
   }
+  if (d.newBaseRequested.has_value()) {
+    j["newBaseRequested"] = *d.newBaseRequested;
+  }
+  j["nodeStates"] = d.nodeStates;
+  j["operatingMode"] = d.operatingMode;
   j["orderId"] = d.orderId;
   j["orderUpdateId"] = d.orderUpdateId;
-  j["paused"] = d.paused;
+  if (d.paused.has_value()) {
+    j["paused"] = *d.paused;
+  }
   j["safetyState"] = d.safetyState;
   if (d.velocity.has_value()) {
     j["velocity"] = *d.velocity;
@@ -761,15 +785,19 @@ void from_json(const json &j, State &d) {
   d.informations = j.at("informations").get<std::vector<Info>>();
   d.lastNodeId = j.at("lastNodeId");
   d.lastNodeSequenceId = j.at("lastNodeSequenceId");
-  d.loads = j.at("loads").get<std::vector<Load>>();
-  d.newBaseRequested = j.at("newBaseRequested");
-  d.nodeStates = j.at("nodeStates").get<std::vector<NodeState>>();
-  if (j.contains("operatingMode")) {
-    d.operatingMode = j.at("operatingMode");
+  if (j.contains("loads")) {
+    d.loads = j.at("loads").get<std::vector<Load>>();
   }
+  if (j.contains("newBaseRequested")) {
+    d.newBaseRequested = j.at("newBaseRequested");
+  }
+  d.nodeStates = j.at("nodeStates").get<std::vector<NodeState>>();
+  d.operatingMode = j.at("operatingMode");
   d.orderId = j.at("orderId");
   d.orderUpdateId = j.at("orderUpdateId");
-  d.paused = j.at("paused");
+  if (j.contains("paused")) {
+    d.paused = j.at("paused");
+  }
   d.safetyState = j.at("safetyState");
   if (j.contains("velocity")) {
     d.velocity = j.at("velocity");

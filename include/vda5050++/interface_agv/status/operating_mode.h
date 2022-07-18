@@ -23,19 +23,12 @@ void setOperatingMode(Handle &handle,
                       const vda5050pp::OperatingMode &operating_mode) noexcept(true);
 
 ///
-///\brief Unset the Operating Mode object
-///
-///\param handle the current library handle
-///
-void unsetOperatingMode(Handle &handle) noexcept(true);
-
-///
 ///\brief Get the current OperatingMode (may be unset)
 ///
 ///\param handle the current library handle
-///\return std::optional<vda5050pp::OperatingMode>
+///\return vda5050pp::OperatingMode
 ///
-std::optional<vda5050pp::OperatingMode> getOperatingMode(const Handle &handle) noexcept(true);
+vda5050pp::OperatingMode getOperatingMode(const Handle &handle) noexcept(true);
 }  // namespace vda5050pp::interface_agv::status
 
 #endif /* INCLUDE_VDA5050_2B_2B_INTERFACE_AGV_STATUS_OPERATING_MODE */

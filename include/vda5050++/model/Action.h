@@ -39,7 +39,7 @@ struct Action {
   /// Array of actionParameter objects for the indicated
   /// action e.g.deviceId, loadId, external Triggers.
   /// See “Actions and Parameters”.
-  std::vector<ActionParameter> actionParameters;
+  std::optional<std::vector<ActionParameter>> actionParameters;
 
   ///
   ///\brief Compare to another action

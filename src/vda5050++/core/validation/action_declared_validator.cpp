@@ -197,7 +197,8 @@ std::list<vda5050pp::Error> vda5050pp::core::validation::ActionDeclaredValidator
 
     // Parameters?
     auto param_decls_left = it->parameter;
-    for (const auto &param : action.actionParameters) {
+    for (const auto &param :
+         action.actionParameters.value_or(std::vector<vda5050pp::ActionParameter>())) {
       auto decl = it->parameter.find({param.key, std::nullopt, std::nullopt, std::nullopt});
       auto decl_opt =
           it->optional_parameter.find({param.key, std::nullopt, std::nullopt, std::nullopt});

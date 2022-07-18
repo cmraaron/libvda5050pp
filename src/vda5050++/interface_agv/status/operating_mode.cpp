@@ -14,18 +14,12 @@ void vda5050pp::interface_agv::status::setOperatingMode(
   vda5050pp::core::interface_agv::HandleAccessor ha(handle);
   auto old_mode = ha.getState().getOperatingMode();
   ha.getState().setOperatingMode(operating_mode);
-  if (old_mode.has_value() && operating_mode != *old_mode) {
+  if (operating_mode != old_mode) {
     ha.getMessages().requestStateUpdate(vda5050pp::core::messages::UpdateUrgency::k_medium);
   }
 }
 
-void vda5050pp::interface_agv::status::unsetOperatingMode(Handle &handle) noexcept(true) {
-  vda5050pp::core::interface_agv::HandleAccessor ha(handle);
-  ha.getState().unsetOperatingMode();
-  ha.getMessages().requestStateUpdate(vda5050pp::core::messages::UpdateUrgency::k_medium);
-}
-
-std::optional<vda5050pp::OperatingMode> vda5050pp::interface_agv::status::getOperatingMode(
+vda5050pp::OperatingMode vda5050pp::interface_agv::status::getOperatingMode(
     const Handle &handle) noexcept(true) {
   const vda5050pp::core::interface_agv::ConstHandleAccessor ha(handle);
   return ha.getState().getOperatingMode();
