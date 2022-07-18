@@ -122,7 +122,7 @@ struct State {
 
   /// Enum {automatic, semi-automatic, manual, service, teach-in}
   /// For additional information see chapter 6.11
-  std::optional<OperatingMode> operatingMode;
+  OperatingMode operatingMode;
 
   /// Array of error - objects. All active errors of the AGV
   /// should be in the list. An empty array indicates that the

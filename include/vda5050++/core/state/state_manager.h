@@ -422,7 +422,7 @@ public:
   ///
   /// \return std::optional<vda5050pp::OperatingMode>
   ///
-  std::optional<vda5050pp::OperatingMode> getOperatingMode() const noexcept(true);
+  vda5050pp::OperatingMode getOperatingMode() const noexcept(true);
 
   ///
   /// \brief Set the current OperatingMode
@@ -430,11 +430,6 @@ public:
   /// \param operating_mode
   ///
   void setOperatingMode(const vda5050pp::OperatingMode &operating_mode) noexcept(true);
-
-  ///
-  /// \brief Unset the current OperatingMode
-  ///
-  void unsetOperatingMode() noexcept(true);
 
   ///
   /// \brief Get the next node (may not be present)

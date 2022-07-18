@@ -735,9 +735,7 @@ void to_json(json &j, const State &d) {
   j["loads"] = d.loads;
   j["newBaseRequested"] = d.newBaseRequested;
   j["nodeStates"] = d.nodeStates;
-  if (d.operatingMode.has_value()) {
-    j["operatingMode"] = *d.operatingMode;
-  }
+  j["operatingMode"] = d.operatingMode;
   j["orderId"] = d.orderId;
   j["orderUpdateId"] = d.orderUpdateId;
   j["paused"] = d.paused;
@@ -768,9 +766,7 @@ void from_json(const json &j, State &d) {
   d.loads = j.at("loads").get<std::vector<Load>>();
   d.newBaseRequested = j.at("newBaseRequested");
   d.nodeStates = j.at("nodeStates").get<std::vector<NodeState>>();
-  if (j.contains("operatingMode")) {
-    d.operatingMode = j.at("operatingMode");
-  }
+  d.operatingMode = j.at("operatingMode");
   d.orderId = j.at("orderId");
   d.orderUpdateId = j.at("orderUpdateId");
   d.paused = j.at("paused");

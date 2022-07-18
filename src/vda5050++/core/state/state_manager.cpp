@@ -49,7 +49,7 @@ StateManager::StateManager() noexcept(true) {
   this->state_.state.loads = {};
   this->state_.state.newBaseRequested = false;
   this->state_.state.nodeStates = {};
-  this->state_.state.operatingMode = std::nullopt;
+  this->state_.state.operatingMode = vda5050pp::OperatingMode::AUTOMATIC;
   this->state_.state.orderId = "";
   this->state_.state.orderUpdateId = 0;
   this->state_.state.paused = false;
@@ -553,7 +553,7 @@ void StateManager::setPausedState(bool paused) noexcept(true) {
   this->state_.state.paused = paused;
 }
 
-std::optional<vda5050pp::OperatingMode> StateManager::getOperatingMode() const noexcept(true) {
+vda5050pp::OperatingMode StateManager::getOperatingMode() const noexcept(true) {
   auto lock = this->state_.acquireShared();
   return this->state_.state.operatingMode;
 }
@@ -561,11 +561,6 @@ std::optional<vda5050pp::OperatingMode> StateManager::getOperatingMode() const n
 void StateManager::setOperatingMode(const vda5050pp::OperatingMode &operating_mode) noexcept(true) {
   auto lock = this->state_.acquire();
   this->state_.state.operatingMode = operating_mode;
-}
-
-void StateManager::unsetOperatingMode() noexcept(true) {
-  auto lock = this->state_.acquire();
-  this->state_.state.operatingMode = std::nullopt;
 }
 
 std::optional<vda5050pp::Node> StateManager::getNextNode() const noexcept(true) {
