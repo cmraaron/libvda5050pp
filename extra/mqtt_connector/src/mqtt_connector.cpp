@@ -101,7 +101,7 @@ void MqttConnector::message_arrived(mqtt::const_message_ptr msg) {
     } else {
       logger->logWarn(format("Received MQTT message on unknown topic \"{}\"", msg->get_topic()));
     }
-  } catch (const json::parse_error &e) {
+  } catch (const json::exception &e) {
     logger->logError(
         format("MQTT deserialization exception: {} on topic \"{}\"", e.what(), msg->get_topic()));
   }
