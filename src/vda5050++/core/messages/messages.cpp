@@ -39,23 +39,13 @@ void Messages::connect() noexcept(false) {
     throw e;
   }
   ha.getLogger().logInfo("Connected!\n");
-
-  // Send online message
-  try {
-    ha.getConnector()->queueConnection(
-        {this->mkHeader(ha.getState().nextConnectionSeq()), vda5050pp::ConnectionState::ONLINE});
-  } catch (const std::exception &e) {
-    ha.getLogger().logError(vda5050pp::core::common::logstring(
-        "Could not send Online Message due to exception: ", e.what()));
-  }
 }
 
 void Messages::disconnect() noexcept(false) {
   vda5050pp::core::interface_agv::HandleAccessor ha(this->handle_);
   // Send offline message and disconnect
   if (ha.getConnector() != nullptr) {
-    ha.getConnector()->disconnect(
-        {this->mkHeader(ha.getState().nextConnectionSeq()), vda5050pp::ConnectionState::OFFLINE});
+    ha.getConnector()->disconnect();
   }
 }
 
@@ -111,11 +101,9 @@ void Messages::sendVisualization(const vda5050pp::Visualization &visualization) 
   try {
     connector->queueVisualization(v);
     ha.getLogger().logInfo(
-        vda5050pp::core::common::logstring("Visualization #", v.header.headerId,
-                                           " sent"));
+        vda5050pp::core::common::logstring("Visualization #", v.header.headerId, " sent"));
   } catch (const std::exception &e) {
     ha.getLogger().logError(vda5050pp::core::common::logstring(
-        "Could not send Visualization #", v.header.headerId, " due to exception: ",
-        e.what()));
+        "Could not send Visualization #", v.header.headerId, " due to exception: ", e.what()));
   }
 }

@@ -11,6 +11,7 @@
 #include <thread>
 
 #include "vda5050++/core/common/formatting.h"
+#include "vda5050++/core/version.h"
 #include "vda5050++/extra/json_model.h"
 #include "vda5050++/interface_agv/logger.h"
 
@@ -40,7 +41,7 @@ MqttConnector::MqttConnector(const vda5050pp::interface_agv::agv_description::AG
 
   auto mkTopic = [&opts, &desc](auto &subtopic) -> std::string {
     std::stringstream topic;
-    topic << opts.interface << '/' << opts.version_overwrite.value_or("v2") << '/'
+    topic << opts.interface << '/' << opts.version_overwrite.value_or("v1") << '/'
           << desc.manufacturer << '/' << desc.serial_number << '/' << subtopic;
     return topic.str();
   };
@@ -50,6 +51,10 @@ MqttConnector::MqttConnector(const vda5050pp::interface_agv::agv_description::AG
   this->visualization_topic_ = mkTopic("visualization");
   this->instant_actions_topic_ = mkTopic("instantActions");
   this->state_topic_ = mkTopic("state");
+
+  this->header_template_.manufacturer = desc.manufacturer;
+  this->header_template_.serialNumber = desc.serial_number;
+  this->header_template_.version = vda5050pp::core::version::current;
 
   this->shutdown_ = false;
 }
@@ -72,6 +77,15 @@ void MqttConnector::on_success(const mqtt::token &) {
 void MqttConnector::connected(const std::string &) {
   this->mqtt_client_.subscribe(this->order_topic_, this->k_qos);
   this->mqtt_client_.subscribe(this->instant_actions_topic_, this->k_qos);
+
+  vda5050pp::Connection online_msg;
+  online_msg.header = this->header_template_;
+  online_msg.header.headerId = this->header_id_counter_++;
+  online_msg.header.timestamp = std::chrono::system_clock::now();
+  online_msg.connectionState = vda5050pp::ConnectionState::ONLINE;
+
+  this->queueConnection(online_msg);
+
   vda5050pp::interface_agv::Logger::getCurrentLogger()->logInfo("MqttConnector: connected");
 }
 
@@ -196,6 +210,20 @@ void MqttConnector::queueVisualization(const vda5050pp::Visualization &visualiza
 void MqttConnector::connect() noexcept(false) {
   auto logger = vda5050pp::interface_agv::Logger::getCurrentLogger();
 
+  vda5050pp::Connection will_msg;
+  will_msg.header = this->header_template_;
+  will_msg.header.timestamp = std::chrono::system_clock::now();
+  will_msg.header.headerId = this->header_id_counter_ + 1;  // after online msg
+  will_msg.connectionState = vda5050pp::ConnectionState::CONNECTIONBROKEN;
+
+  mqtt::will_options will;
+  will.set_topic(this->connection_topic_);
+  will.set_retained(true);
+  will.set_qos(this->k_qos);
+  will.set_payload(json(will_msg).dump());
+
+  this->connect_opts_.set_will(std::move(will));
+
   try {
     auto tok = this->mqtt_client_.connect(this->connect_opts_, nullptr, *this);
     if (tok == nullptr) {
@@ -211,21 +239,26 @@ void MqttConnector::connect() noexcept(false) {
   }
 }
 
-void MqttConnector::disconnect() noexcept(false) { this->mqtt_client_.disconnect(); }
-
-void MqttConnector::disconnect(const vda5050pp::Connection &connection) noexcept(false) {
+void MqttConnector::disconnect() noexcept(false) {
   if (!this->mqtt_client_.is_connected()) {
     throw NotConnectedError();
   }
 
+  vda5050pp::Connection offline_msg;
+  offline_msg.header = this->header_template_;
+  offline_msg.header.timestamp = std::chrono::system_clock::now();
+  offline_msg.header.headerId = this->header_id_counter_++;
+  offline_msg.connectionState = vda5050pp::ConnectionState::OFFLINE;
+
   auto msg = std::make_shared<mqtt::message>();
   msg->set_qos(this->k_qos);
   msg->set_topic(this->connection_topic_);
+  msg->set_retained(true);
 
-  json j = connection;
+  json j = offline_msg;
   msg->set_payload(j.dump());
 
   auto tok = this->mqtt_client_.publish(msg);
   tok->wait_for(5s);
-  this->disconnect();
+  this->mqtt_client_.disconnect();
 }
