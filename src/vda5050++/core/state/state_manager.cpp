@@ -47,7 +47,7 @@ StateManager::StateManager() noexcept(true) {
   this->state_.state.lastNodeId = "";
   this->state_.state.lastNodeSequenceId = 0;
   this->state_.state.loads = {};
-  this->state_.state.newBaseRequested = false;
+  this->state_.state.newBaseRequest = false;
   this->state_.state.nodeStates = {};
   this->state_.state.operatingMode = vda5050pp::OperatingMode::AUTOMATIC;
   this->state_.state.orderId = "";
@@ -231,7 +231,7 @@ void StateManager::clearOrder() noexcept(true) {
   this->state_.state.distanceSinceLastNode = 0;
   this->state_.state.errors.clear();
   this->state_.state.informations.clear();
-  this->state_.state.newBaseRequested = false;
+  this->state_.state.newBaseRequest = false;
   this->state_.state.orderId = "";
   this->state_.state.orderUpdateId = 0;
 }
@@ -376,7 +376,7 @@ bool StateManager::isDriving() const noexcept(true) { return this->state_.state.
 
 void StateManager::requestNewBase() noexcept(true) {
   auto lock = this->state_.acquire();
-  this->state_.state.newBaseRequested = true;
+  this->state_.state.newBaseRequest = true;
   // TODO: Notify
 }
 
