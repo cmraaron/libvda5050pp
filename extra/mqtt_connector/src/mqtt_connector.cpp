@@ -142,6 +142,7 @@ void MqttConnector::queueConnection(const vda5050pp::Connection &connection) noe
   auto msg = std::make_shared<mqtt::message>();
   msg->set_qos(this->k_qos);
   msg->set_topic(this->connection_topic_);
+  msg->set_retained(true);
 
   json j = connection;
   msg->set_payload(j.dump());
