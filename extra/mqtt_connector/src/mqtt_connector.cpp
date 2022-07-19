@@ -61,7 +61,9 @@ MqttConnector::MqttConnector(const vda5050pp::interface_agv::agv_description::AG
 
 MqttConnector::~MqttConnector() {
   this->shutdown_ = true;
-  this->disconnect();
+  if (this->mqtt_client_.is_connected()) {
+    this->disconnect();
+  }
 }
 
 void MqttConnector::on_failure(const mqtt::token &) {
