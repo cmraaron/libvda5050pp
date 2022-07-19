@@ -55,19 +55,9 @@ public:
   virtual void connect() noexcept(false) = 0;
 
   ///
-  ///\brief End the current connection without any message
-  ///
-  /// This can be used to manually end the active connection
+  ///\brief End the current connection, send offline msg
   ///
   virtual void disconnect() noexcept(false) = 0;
-
-  ///
-  ///\brief End the current connection and send a message
-  ///
-  ///\param connection the last connection message to send before disconnecting
-  /// This can be used to manually end the active connection
-  ///
-  virtual void disconnect(const vda5050pp::Connection &connection) noexcept(false) = 0;
 };
 
 }  // namespace vda5050pp::interface_mc
