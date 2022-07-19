@@ -35,8 +35,6 @@ public:
 
   virtual void disconnect() noexcept(false) override;
 
-  virtual void disconnect(const vda5050pp::Connection &connection) noexcept(false) override;
-
   void receiveOrder(const vda5050pp::Order &order) noexcept(true);
   void receiveInstantActions(const vda5050pp::InstantActions &instant_actions) noexcept(true);
 };

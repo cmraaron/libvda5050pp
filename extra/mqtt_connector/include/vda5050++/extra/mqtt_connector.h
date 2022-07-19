@@ -12,6 +12,7 @@
 #include <vda5050++/interface_agv/agv_description/agv_description.h>
 #include <vda5050++/interface_mc/connector.h>
 
+#include <atomic>
 #include <map>
 #include <memory>
 #include <optional>
@@ -35,6 +36,8 @@ private:
   std::string order_topic_;
   std::string state_topic_;
   std::string visualization_topic_;
+  vda5050pp::Header header_template_;
+  std::atomic_int header_id_counter_ = 1;
 
   std::map<mqtt::delivery_token_ptr, mqtt::message_ptr> pending_deliveries_;
 
@@ -137,19 +140,11 @@ public:
   void connect() noexcept(false) override;
 
   ///
-  ///\brief End the current connection without any message
+  ///\brief End the current connection, send offline msg
   ///
   /// This can be used to manually end the active connection
   ///
   void disconnect() noexcept(false) override;
-
-  ///
-  ///\brief End the current connection and send a message
-  ///
-  ///\param connection the last connection message to send before disconnecting
-  /// This can be used to manually end the active connection
-  ///
-  void disconnect(const vda5050pp::Connection &connection) noexcept(false) override;
 };
 
 }  // namespace vda5050pp::extra

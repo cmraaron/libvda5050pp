@@ -22,8 +22,6 @@ void test::TestConnector::connect() noexcept(false) {}
 
 void test::TestConnector::disconnect() noexcept(false) {}
 
-void test::TestConnector::disconnect(const vda5050pp::Connection &) noexcept(false) {}
-
 void test::TestConnector::receiveOrder(const vda5050pp::Order &order) noexcept(true) {
   auto ptr = this->consumer_.lock();
   if (ptr != nullptr) {
