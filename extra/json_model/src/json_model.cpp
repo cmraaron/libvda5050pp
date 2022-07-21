@@ -809,8 +809,8 @@ void from_json(const json &j, State &d) {
 
 void to_json(json &j, const EStop &d) {
   switch (d) {
-    case vda5050pp::EStop::AUTO_ACK:
-      j = "AUTO_ACK";
+    case vda5050pp::EStop::AUTOACK:
+      j = "AUTOACK";
       break;
     case vda5050pp::EStop::MANUAL:
       j = "MANUAL";
@@ -828,8 +828,8 @@ void to_json(json &j, const EStop &d) {
 }
 void from_json(const json &j, EStop &d) {
   auto str = j.get<std::string>();
-  if (str == "AUTO_ACK") {
-    d = vda5050pp::EStop::AUTO_ACK;
+  if (str == "AUTOACK") {
+    d = vda5050pp::EStop::AUTOACK;
   } else if (str == "MANUAL") {
     d = vda5050pp::EStop::MANUAL;
   } else if (str == "REMOTE") {
@@ -847,8 +847,8 @@ void to_json(json &j, const OperatingMode &d) {
     case vda5050pp::OperatingMode::MANUAL:
       j = "MANUAL";
       break;
-    case vda5050pp::OperatingMode::SEMI_AUTOMATIC:
-      j = "SEMI_AUTOMATIC";
+    case vda5050pp::OperatingMode::SEMIAUTOMATIC:
+      j = "SEMIAUTOMATIC";
       break;
     case vda5050pp::OperatingMode::SERVICE:
       j = "SERVICE";
@@ -867,8 +867,8 @@ void from_json(const json &j, OperatingMode &d) {
     d = vda5050pp::OperatingMode::AUTOMATIC;
   } else if (str == "MANUAL") {
     d = vda5050pp::OperatingMode::MANUAL;
-  } else if (str == "SEMI_AUTOMATIC") {
-    d = vda5050pp::OperatingMode::SEMI_AUTOMATIC;
+  } else if (str == "SEMIAUTOMATIC") {
+    d = vda5050pp::OperatingMode::SEMIAUTOMATIC;
   } else if (str == "SERVICE") {
     d = vda5050pp::OperatingMode::SERVICE;
   } else if (str == "TEACHIN") {

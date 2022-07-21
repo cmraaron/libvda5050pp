@@ -8,8 +8,8 @@
 // zeugen (FTF) und einer Leitsteuerung
 // VDA 5050 Version 2.0, Mai 2020
 
-#ifndef INCLUDE_VDA5050PP_MODEL_ESTOP_HPP_
-#define INCLUDE_VDA5050PP_MODEL_ESTOP_HPP_
+#ifndef INCLUDE_VDA5050_2B_2B_MODEL_ESTOP_H_
+#define INCLUDE_VDA5050_2B_2B_MODEL_ESTOP_H_
 
 #include <ostream>
 
@@ -18,7 +18,7 @@ namespace vda5050pp {
 enum class EStop {
   /// autoAck: autoacknowledgeable e-stop is activated e.g. by bumper or
   ///          protective field
-  AUTO_ACK,
+  AUTOACK,
 
   /// manual: e-stop has to be acknowledged manually at the vehicle
   MANUAL,
@@ -39,8 +39,8 @@ enum class EStop {
 ///
 constexpr std::ostream &operator<<(std::ostream &os, const EStop &e_stop) {
   switch (e_stop) {
-    case EStop::AUTO_ACK:
-      os << "AUTO_ACK";
+    case EStop::AUTOACK:
+      os << "AUTOACK";
       break;
     case EStop::MANUAL:
       os << "MANUAL";
@@ -57,4 +57,4 @@ constexpr std::ostream &operator<<(std::ostream &os, const EStop &e_stop) {
   return os;
 }
 }  // namespace vda5050pp
-#endif  // INCLUDE_VDA5050PP_MODEL_ESTOP_HPP_
+#endif  // INCLUDE_VDA5050_2B_2B_MODEL_ESTOP_H_
