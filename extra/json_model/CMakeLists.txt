@@ -21,6 +21,14 @@ target_include_directories(json_model PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
+## Check platform deps #########################################################
+include(CheckCXXSymbolExists)
+check_cxx_symbol_exists(gmtime_r "ctime" HAVE_CTIME_GMTIME_R)
+if(${HAVE_CTIME_LOCALTIME_R})
+  target_compile_definitions(json_model PRIVATE HAVE_CTIME_GMTIME_R)
+endif()
+################################################################################
+
 install(TARGETS json_model
   EXPORT json_modelTargets
   DESTINATION lib/${PROJECT_NAME}
