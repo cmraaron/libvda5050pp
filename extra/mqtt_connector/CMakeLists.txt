@@ -3,8 +3,8 @@ find_package(PahoMqttCpp REQUIRED)
 add_library(mqtt_connector STATIC
   src/mqtt_connector.cpp
 )
-target_link_libraries(mqtt_connector PUBLIC vda5050++)
-target_link_libraries(mqtt_connector PRIVATE json_model PahoMqttCpp::paho-mqttpp3-static)
+target_link_libraries(mqtt_connector PUBLIC vda5050++ PahoMqttCpp::paho-mqttpp3)
+target_link_libraries(mqtt_connector PRIVATE json_model )
 target_include_directories(mqtt_connector PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
