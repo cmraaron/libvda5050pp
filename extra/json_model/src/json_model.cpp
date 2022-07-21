@@ -19,8 +19,12 @@ void to_json(json &j, const Header &d) {
   // Write ISO8601 UTC timestamp
   auto tt = std::chrono::system_clock::to_time_t(d.timestamp);
   std::stringstream ss;
-  std::tm tm;
-  ss << std::put_time(gmtime_r(&tt, &tm), "%FT%TZ");
+  #if HAVE_CTIME_GMTIME_R
+    std::tm tm;
+    ss << std::put_time(gmtime_r(&tt, &tm), "%FT%TZ");
+  #else
+    ss << std::put_time(gmtime(&tt), "%FT%TZ");
+  #endif
   j["timestamp"] = ss.str();
 
   j["version"] = d.version;
