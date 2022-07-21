@@ -13,6 +13,7 @@
 #include <utility>
 #include <vector>
 
+#include "vda5050++/core/state/state_manager.h"
 #include "vda5050++/model/Action.h"
 #include "vda5050++/model/ErrorLevel.h"
 #include "vda5050++/model/ErrorReference.h"
@@ -163,6 +164,7 @@ protected:
   ///
   void setResult(const std::string &result);
 
+  vda5050pp::core::state::StateManager &getState() noexcept(true);
 public:
   virtual ~ActionHandler() = default;
 

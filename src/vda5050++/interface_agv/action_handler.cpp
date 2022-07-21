@@ -99,3 +99,8 @@ void ActionHandler::setResult(const std::string &result) {
 }
 
 const vda5050pp::Action &ActionHandler::getAction() const { return this->action_; }
+
+vda5050pp::core::state::StateManager &ActionHandler::getState() noexcept(true) {
+  vda5050pp::core::interface_agv::HandleAccessor ha(*this->handle_);
+  return ha.getState();
+}
