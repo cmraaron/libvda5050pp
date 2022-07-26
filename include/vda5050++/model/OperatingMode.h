@@ -28,7 +28,7 @@ enum class OperatingMode : uint8_t {
   /// the speed of automatic mode) The steering is
   /// under automatic control.
   /// (non-safe HMI possible)
-  SEMI_AUTOMATIC,
+  SEMIAUTOMATIC,
 
   /// MC is not in control of the AGV. Supervisor
   /// doesn’t send driving order or actions to the
@@ -64,8 +64,8 @@ constexpr std::ostream &operator<<(std::ostream &os, OperatingMode &operating_mo
     case OperatingMode::AUTOMATIC:
       os << "AUTOMATIC";
       break;
-    case OperatingMode::SEMI_AUTOMATIC:
-      os << "SEMI_AUTOMATIC";
+    case OperatingMode::SEMIAUTOMATIC:
+      os << "SEMIAUTOMATIC";
       break;
     case OperatingMode::MANUAL:
       os << "MANUAL";
