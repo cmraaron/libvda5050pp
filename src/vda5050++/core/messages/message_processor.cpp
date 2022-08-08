@@ -107,7 +107,8 @@ void vda5050pp::core::messages::MessageProcessor::receivedOrder(
     auto cmp_seq = [](auto &n1, auto &n2) -> bool { return n1.sequenceId < n2.sequenceId; };
     auto order_first_node_it = std::min_element(cbegin(order.nodes), cend(order.nodes), cmp_seq);
 
-    bool appends = state.getGraphBaseSeqId() == order_first_node_it->sequenceId;
+    bool appends = state.getGraphBaseSeqId() != 0 &&
+                   state.getGraphBaseSeqId() == order_first_node_it->sequenceId;
 
     if ((state.isIdle() || order.orderId != state.getOrderId()) && !appends) {
       logic.clear();
