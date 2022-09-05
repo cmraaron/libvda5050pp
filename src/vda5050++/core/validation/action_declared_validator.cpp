@@ -17,8 +17,8 @@
 
 static const std::string k_description = "Check if the Action was declared in the AGV description";
 
-const auto k_ser_float64_min =
-    vda5050pp::interface_agv::agv_description::SerializedValue(std::numeric_limits<double>::min());
+const auto k_ser_float64_min = vda5050pp::interface_agv::agv_description::SerializedValue(
+    std::numeric_limits<double>::lowest());
 
 const auto k_ser_float64_max =
     vda5050pp::interface_agv::agv_description::SerializedValue(std::numeric_limits<double>::max());
