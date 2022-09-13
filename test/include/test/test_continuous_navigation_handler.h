@@ -49,6 +49,7 @@ public:
   void doResumed();
   void doNodeReached(uint32_t node_seq);
   const std::list<vda5050pp::Node> &doGetBaseNodes();
+  const std::list<vda5050pp::Edge> &doGetBaseEdges();
 
   TestContinuousNavigationHandler();
   virtual ~TestContinuousNavigationHandler();
