@@ -69,15 +69,16 @@ private:
   ///\brief Insert a Timestep for driving to a Node
   ///
   ///\param node the node to drive to
-  ///\param edge the via-edge (may be nullopt, if node is the first in the graph)
+  ///\param edge the via-edge
   ///\param cancel_action_ids  all actions that will be canceled once the Node is reached
   ///
-  void insertTimeStepDriveToNode(const vda5050pp::Node &node,
-                                 const std::optional<vda5050pp::Edge> &edge,
+  void insertTimeStepDriveToNode(const vda5050pp::Node &node, const vda5050pp::Edge &edge,
                                  std::vector<std::string> &&cancel_action_ids) noexcept(false);
 
   ///
-  ///\brief Interpret the actions of a Node
+  ///\brief Interpret *only* the actions of a Node.
+  ///       No driving step will be inserted, because this will only be called
+  ///       for the first node of each order.
   ///
   ///\param node  the node to interpret
   ///

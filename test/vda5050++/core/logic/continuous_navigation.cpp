@@ -99,13 +99,19 @@ TEST_CASE("continuous navigation - two node order") {
 
       THEN("Continuous driving is initialized knows the whole graph") {
         auto &handler = test::continuous_navigation_handler_by_seq.at(2).get();
-        std::set<std::string> require = {"n2"};
-        std::set<std::string> has;
+        std::set<std::string> n_require = {"n2"};
+        std::set<std::string> n_has;
+        std::set<std::string> e_require = {"e1"};
+        std::set<std::string> e_has;
         REQUIRE(handler.timesStartCalled() == 1);
         for (const auto &node : handler.doGetBaseNodes()) {
-          has.insert(node.nodeId);
+          n_has.insert(node.nodeId);
         }
-        REQUIRE(require == has);
+        for (const auto &edge : handler.doGetBaseEdges()) {
+          e_has.insert(edge.edgeId);
+        }
+        REQUIRE(n_require == n_has);
+        REQUIRE(e_require == e_has);
         testDriving(handle, true);
       }
 
@@ -182,13 +188,19 @@ TEST_CASE("continuous navigation - uninterrupted navigation",
 
       THEN("Continuous driving is initialized knows the whole graph") {
         auto &handler = test::continuous_navigation_handler_by_seq.at(2).get();
-        std::set<std::string> require = {"n2", "n3"};
-        std::set<std::string> has;
+        std::set<std::string> n_require = {"n2", "n3"};
+        std::set<std::string> n_has;
+        std::set<std::string> e_require = {"e1", "e2"};
+        std::set<std::string> e_has;
         REQUIRE(handler.timesStartCalled() == 1);
         for (const auto &node : handler.doGetBaseNodes()) {
-          has.insert(node.nodeId);
+          n_has.insert(node.nodeId);
         }
-        REQUIRE(require == has);
+        for (const auto &edge : handler.doGetBaseEdges()) {
+          e_has.insert(edge.edgeId);
+        }
+        REQUIRE(n_require == n_has);
+        REQUIRE(e_require == e_has);
         testDriving(handle, true);
       }
 
@@ -375,13 +387,19 @@ TEST_CASE("continuous navigation - base increase navigation",
       handle.spinAll();
       THEN("A continuous node handler with n2 is created") {
         auto &handler = test::continuous_navigation_handler_by_seq.at(2).get();
-        std::set<std::string> require = {"n2"};
-        std::set<std::string> has;
+        std::set<std::string> n_require = {"n2"};
+        std::set<std::string> n_has;
+        std::set<std::string> e_require = {"e1"};
+        std::set<std::string> e_has;
         REQUIRE(handler.timesStartCalled() == 1);
         for (const auto &node : handler.doGetBaseNodes()) {
-          has.insert(node.nodeId);
+          n_has.insert(node.nodeId);
         }
-        REQUIRE(require == has);
+        for (const auto &edge : handler.doGetBaseEdges()) {
+          e_has.insert(edge.edgeId);
+        }
+        REQUIRE(n_require == n_has);
+        REQUIRE(e_require == e_has);
         testDriving(handle, true);
       }
     }
@@ -402,15 +420,20 @@ TEST_CASE("continuous navigation - base increase navigation",
       handle.spinAll();
       testDriving(handle, true);
 
-      THEN("The base contains n2-n4") {
-        std::set<std::string> require = {"n3", "n4"};
-        std::set<std::string> has;
+      THEN("The base contains e2-n4") {
+        std::set<std::string> n_require = {"n3", "n4"};
+        std::set<std::string> n_has;
+        std::set<std::string> e_require = {"e2", "e3"};
+        std::set<std::string> e_has;
         REQUIRE(handler.timesStartCalled() == 1);
-        REQUIRE(handler.timesBaseIncreasedCalled() == 1);
         for (const auto &node : handler.doGetBaseNodes()) {
-          has.insert(node.nodeId);
+          n_has.insert(node.nodeId);
         }
-        REQUIRE(require == has);
+        for (const auto &edge : handler.doGetBaseEdges()) {
+          e_has.insert(edge.edgeId);
+        }
+        REQUIRE(n_require == n_has);
+        REQUIRE(e_require == e_has);
       }
       WHEN("N4 is reached") {
         handler.doNodeReached(4);
