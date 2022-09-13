@@ -129,7 +129,7 @@ void NetManager::insertTimeStepAction(const std::vector<std::string> &action_ids
 }
 
 void NetManager::insertTimeStepDriveToNode(
-    const vda5050pp::Node &node, const std::optional<vda5050pp::Edge> &edge,
+    const vda5050pp::Node &node, const vda5050pp::Edge &edge,
     std::vector<std::string> &&cancel_action_ids) noexcept(false) {
   vda5050pp::core::interface_agv::HandleAccessor ha(this->handle_);
   ha.getLogger().logDebug(
@@ -140,23 +140,12 @@ void NetManager::insertTimeStepDriveToNode(
         this->continuous_navigation_managers_.front()->isFinalized()) {
       // No old manager available, or it is finalized -> create a new one
 
-      if (this->last_node_.has_value()) {
-        if (!edge.has_value()) {
-          ha.getLogger().logError(LOGSTRING(
-              "BUG: The current CNavMgr seems not to be the first one, but no edge is given"));
-        }
-        this->continuous_navigation_managers_.push_front(
-            std::make_shared<ContinuousNavigationManager>(this->handle_, *this, node, *edge,
-                                                          std::move(cancel_action_ids)));
-      } else {
-        this->continuous_navigation_managers_.push_front(
-            std::make_shared<ContinuousNavigationManager>(this->handle_, *this, node,
-                                                          std::move(cancel_action_ids)));
-      }
+      this->continuous_navigation_managers_.push_front(
+          std::make_shared<ContinuousNavigationManager>(this->handle_, *this, node, edge,
+                                                        std::move(cancel_action_ids)));
       this->continuous_navigation_managers_.front()->setOnDrivingChanged(this->on_driving_changed_);
     } else {
-      auto &m_edge = edge.value();
-      this->continuous_navigation_managers_.front()->append(node, m_edge,
+      this->continuous_navigation_managers_.front()->append(node, edge,
                                                             std::move(cancel_action_ids));
     }
 
