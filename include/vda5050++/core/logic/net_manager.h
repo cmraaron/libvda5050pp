@@ -38,8 +38,6 @@ private:
   Net net_;
   SeqNrT next_seq_ = 0;
 
-  std::optional<vda5050pp::Node> last_node_;
-
   std::shared_ptr<Net::PlaceT> tail_place_;
   std::vector<std::shared_ptr<Net::PlaceT>> fail_places_;
   std::vector<std::shared_ptr<Net::PlaceT>> finish_places_;
