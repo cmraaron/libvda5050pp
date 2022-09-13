@@ -149,7 +149,6 @@ void NetManager::insertTimeStepDriveToNode(
                                                             std::move(cancel_action_ids));
     }
 
-    this->last_node_ = node;
     return;
   }
 
@@ -330,7 +329,6 @@ void NetManager::clear() noexcept(true) {
   this->net_ = Net();
   this->next_seq_ = 1;
   this->tail_place_ = this->net_.addPlace({LogicTaskNetTypes::k_done, 0}, 1);
-  this->last_node_.reset();
   this->continuous_navigation_managers_.clear();
 }
 
