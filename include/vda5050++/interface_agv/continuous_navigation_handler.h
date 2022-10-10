@@ -353,7 +353,7 @@ protected:
                    double deviation) noexcept(false);
 
 public:
-  virtual ~ContinuousNavigationHandler();
+  virtual ~ContinuousNavigationHandler() = default;
 
   ///
   /// \brief The horizon was updated. This can be used to prepare the AGV for upcoming nodes.

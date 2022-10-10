@@ -110,17 +110,10 @@ void vda5050pp::core::messages::MessageProcessor::receivedOrder(
     bool appends = state.getGraphBaseSeqId() != 0 &&
                    state.getGraphBaseSeqId() == order_first_node_it->sequenceId;
 
-    bool isIdle = state.isIdle();
-    logger.logDebug(vda5050pp::core::common::logstring(
-        "Checking extend/overwrite with appends=", appends, " state.isIdle()=", isIdle,
-        " order.orderId=", order.orderId, " state.orderId=", state.getOrderId()));
-
-    if ((isIdle || order.orderId != state.getOrderId()) && !appends) {
-      logger.logDebug("Replacing order");
+    if ((state.isIdle() || order.orderId != state.getOrderId()) && !appends) {
       logic.clear();
       state.setOrder(order);
     } else {
-      logger.logDebug("Appending order");
       state.appendOrder(order);
     }
   }
