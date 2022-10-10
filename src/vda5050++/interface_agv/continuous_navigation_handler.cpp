@@ -8,6 +8,7 @@
 
 #include <algorithm>
 
+#include "vda5050++/core/common/formatting.h"
 #include "vda5050++/core/interface_agv/const_handle_accessor.h"
 #include "vda5050++/core/interface_agv/handle_accessor.h"
 #include "vda5050++/core/logic/continuous_navigation_manager.h"
@@ -317,4 +318,18 @@ void vda5050pp::interface_agv::ContinuousNavigationHandler::setNodeReached(
   this->base_old_last_edge_ =
       this->base_edges_.end();  // no reset needed, TODO: only change if removed
   this->base_old_last_node_ = this->base_nodes_.end();
+}
+
+vda5050pp::interface_agv::ContinuousNavigationHandler::~ContinuousNavigationHandler() {
+  vda5050pp::core::interface_agv::HandleAccessor ha(*this->handle_);
+
+  if (this->base_nodes_.empty()) {
+    ha.getLogger().logDebug(vda5050pp::core::common::logstring("~ContinuousNavigationHandler: {}"));
+  } else {
+    const auto &start_node = *this->base_nodes_.begin();
+    const auto &end_node = *this->base_nodes_.rbegin();
+
+    ha.getLogger().logDebug(vda5050pp::core::common::logstring(
+        "~ContinuousNavigationHandler: from=", start_node.sequenceId, " to=", end_node.sequenceId));
+  }
 }

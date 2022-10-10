@@ -7,6 +7,7 @@
 #include "vda5050++/core/logic/continuous_navigation_manager.h"
 
 #include "vda5050++/core/common/exception.h"
+#include "vda5050++/core/common/formatting.h"
 #include "vda5050++/core/interface_agv/handle_accessor.h"
 #include "vda5050++/core/logic/net_manager.h"
 
@@ -40,7 +41,14 @@ void ContinuousNavigationManager::startHandler() {
   });
 }
 
-void ContinuousNavigationManager::destroyHandler() { this->handler_.reset(); }
+void ContinuousNavigationManager::destroyHandler() {
+  vda5050pp::core::interface_agv::HandleAccessor ha(this->handle_);
+  auto &logger = ha.getLogger();
+  logger.logDebug(
+      vda5050pp::core::common::logstring("Destroying Handler start_seq=", this->first_node_seq_id_,
+                                         "end_seq=", this->last_node_seq_id_));
+  this->handler_.reset();
+}
 
 void ContinuousNavigationManager::stepDrivingChanged(bool driving) const noexcept(true) {
   if (this->on_driving_changed_ != nullptr) {
