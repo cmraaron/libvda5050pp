@@ -139,12 +139,15 @@ void NetManager::insertTimeStepDriveToNode(
     if (this->continuous_navigation_managers_.empty() ||
         this->continuous_navigation_managers_.front()->isFinalized()) {
       // No old manager available, or it is finalized -> create a new one
+      ha.getLogger().logDebug(
+          vda5050pp::core::common::logstring("Creating new CNavManager ", this->next_seq_));
 
       this->continuous_navigation_managers_.push_front(
           std::make_shared<ContinuousNavigationManager>(this->handle_, *this, node, edge,
                                                         std::move(cancel_action_ids)));
       this->continuous_navigation_managers_.front()->setOnDrivingChanged(this->on_driving_changed_);
     } else {
+      ha.getLogger().logDebug(vda5050pp::core::common::logstring("Appending to CNavManager"));
       this->continuous_navigation_managers_.front()->append(node, edge,
                                                             std::move(cancel_action_ids));
     }
@@ -295,6 +298,7 @@ void NetManager::interpret() noexcept(false) {
   // Otherwise if an uninterpreted Edge is before that Node, actions
   // from that Edge have to be canceled -> interpret them together
   if (state.graph_base_seq_id >= state.graph_next_interpreted_seq_id_) {
+    ha.getLogger().logDebug("interpret() next step");
     if (vda5050pp::core::state::StateManager::isNode(state.graph_next_interpreted_seq_id_)) {
       auto interpret_seq = state.graph_next_interpreted_seq_id_++;
       this->interpretNode(state_mgr.getNodeBySeq(interpret_seq));
@@ -306,7 +310,9 @@ void NetManager::interpret() noexcept(false) {
 
     this->interpret();
   } else {
+    ha.getLogger().logDebug("interpret() last step");
     if (!this->continuous_navigation_managers_.empty()) {
+      ha.getLogger().logDebug("interpret() commit");
       this->continuous_navigation_managers_.front()->commitAppendings();
       this->notifyHorizonChanged();
     }
@@ -332,7 +338,11 @@ void NetManager::clear() noexcept(true) {
   this->continuous_navigation_managers_.clear();
 }
 
-void NetManager::tick() noexcept(true) { this->net_.deepTickCover(); }
+void NetManager::tick() noexcept(true) {
+  vda5050pp::core::interface_agv::HandleAccessor ha(this->handle_);
+  ha.getLogger().logDebug("NetManager::tick()");
+  this->net_.deepTickCover();
+}
 
 void NetManager::pauseAction(const std::string &action_id) noexcept(false) {
   auto pair = this->action_managers_by_id_.find(action_id);
