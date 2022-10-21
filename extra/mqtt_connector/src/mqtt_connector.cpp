@@ -225,6 +225,7 @@ void MqttConnector::connect() noexcept(false) {
   will.set_payload(json(will_msg).dump());
 
   this->connect_opts_.set_will(std::move(will));
+  this->connect_opts_.set_keep_alive_interval(10);
 
   try {
     auto tok = this->mqtt_client_.connect(this->connect_opts_, nullptr, *this);

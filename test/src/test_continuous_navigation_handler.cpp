@@ -62,6 +62,10 @@ const std::list<vda5050pp::Node> &TestContinuousNavigationHandler::doGetBaseNode
   return this->getBaseNodes();
 }
 
+const std::list<vda5050pp::Edge> &TestContinuousNavigationHandler::doGetBaseEdges() {
+  return this->getBaseEdges();
+}
+
 TestContinuousNavigationHandler::TestContinuousNavigationHandler()
     : times_start_called_(0),
       times_pause_called_(0),

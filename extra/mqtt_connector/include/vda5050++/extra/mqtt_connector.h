@@ -41,7 +41,7 @@ private:
 
   std::map<mqtt::delivery_token_ptr, mqtt::message_ptr> pending_deliveries_;
 
-  const int k_qos = 1;
+  const int k_qos = 0;
   bool shutdown_ = false;
 
   void reconnect();
