@@ -9,6 +9,9 @@
 #include <algorithm>
 #include <stdexcept>
 
+#include "vda5050++/core/common/formatting.h"
+#include "vda5050++/interface_agv/logger.h"
+
 using namespace vda5050pp::core::state;
 
 static vda5050pp::ActionState state_from_action(const vda5050pp::Action &a) {
@@ -146,6 +149,8 @@ std::string StateManager::getGraphIdBySeqId(uint32_t seq_id) const noexcept(fals
 void StateManager::appendOrder(const vda5050pp::Order &order) noexcept(true) {
   auto lock = this->state_.acquire();
 
+  auto logger = vda5050pp::interface_agv::Logger::getCurrentLogger();
+
   auto apply_snd = [](const auto &f) { return [&f](const auto &pair) { return f(pair.second); }; };
   auto is_horizon = [](const auto &elem) { return !elem.released; };
 
@@ -168,6 +173,9 @@ void StateManager::appendOrder(const vda5050pp::Order &order) noexcept(true) {
       continue;
     }
 
+    logger->logDebug(vda5050pp::core::common::logstring("Adding Edge ", edge.edgeId, " with seq ",
+                                                        edge.sequenceId, " to the base"));
+
     for (const auto &a : edge.actions) {
       if (this->state_.action_state_by_id.find(a.actionId) !=
           this->state_.action_state_by_id.cend()) {
@@ -189,6 +197,9 @@ void StateManager::appendOrder(const vda5050pp::Order &order) noexcept(true) {
     if (is_horizon(node)) {
       continue;
     }
+
+    logger->logDebug(vda5050pp::core::common::logstring("Adding Node ", node.nodeId, " with seq ",
+                                                        node.sequenceId, " to the base"));
 
     this->state_.graph_base_seq_id = std::max(this->state_.graph_base_seq_id, node.sequenceId);
 
