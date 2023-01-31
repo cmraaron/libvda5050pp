@@ -21,14 +21,14 @@ std::list<vda5050pp::Error> OrderIdValidator::operator()(const vda5050pp::Order 
 
   if (order.orderId == state.getOrderId()) {
     if (order.orderUpdateId < state.getOrderUpdateId()) {
-      return {{"NewerOrder",
+      return {{"orderUpdateError",
                {{{"order.orderId", order.orderId},
                  {"order.orderUpdateId", std::to_string(order.orderUpdateId)}}},
                "An order with this orderId and an greater orderUpdateId was already received",
                ErrorLevel::WARNING}};
     }
   } else if (order.orderUpdateId > 0) {
-    return {{"NoSuchOrder",
+    return {{"orderUpdateError",
              {{{"order.orderId", order.orderId},
                {"order.orderUpdateId", std::to_string(order.orderUpdateId)}}},
              "An order with this orderId was not received",
