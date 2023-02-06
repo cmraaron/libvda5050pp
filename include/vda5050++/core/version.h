@@ -17,7 +17,7 @@ namespace vda5050pp::core::version {
 ///
 ///\brief The current vda5050 version number
 ///
-inline constexpr std::string_view current{"1.1.0"};
+inline constexpr std::string_view current{"2.0.0"};
 
 ///
 ///\brief All compatible vda5050 version numbers
