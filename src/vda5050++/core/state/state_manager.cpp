@@ -247,6 +247,19 @@ void StateManager::clearOrder() noexcept(true) {
   this->state_.state.orderUpdateId = 0;
 }
 
+void StateManager::clearOrderAfterCancel() noexcept(true) {
+  auto lock = this->state_.acquire();
+
+  this->state_.edge_by_seq.clear();
+  this->state_.edge_state_by_seq.clear();
+  this->state_.node_by_seq.clear();
+  this->state_.node_state_by_seq.clear();
+  this->state_.graph_base_seq_id = 0;
+  this->state_.graph_next_interpreted_seq_id_ = 0;
+
+  this->state_.state.newBaseRequest = false;
+}
+
 void StateManager::insertInstantActions(const vda5050pp::InstantActions &instant_actions) noexcept(
     true) {
   auto lock = this->state_.acquire();

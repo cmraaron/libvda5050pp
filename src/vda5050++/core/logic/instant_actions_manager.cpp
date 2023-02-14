@@ -118,9 +118,8 @@ void InstantActionsManager::doInstantAction(const vda5050pp::Action &action) noe
     this->net_manager_.onAllExited([this, action] {
       vda5050pp::core::interface_agv::HandleAccessor ha(this->handle_);
       ha.getState().setActionStatus(action.actionId, vda5050pp::ActionStatus::FINISHED);
+      ha.getState().clearOrderAfterCancel();
       ha.getMessages().requestStateUpdate(messages::UpdateUrgency::k_immediate);
-      ha.getState().clearOrder();
-      ha.getMessages().requestStateUpdate(messages::UpdateUrgency::k_low);
       this->net_manager_.onAllExited(nullptr);
     });
 

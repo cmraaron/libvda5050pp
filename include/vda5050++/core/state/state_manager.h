@@ -105,6 +105,11 @@ public:
   void clearOrder() noexcept(true);
 
   ///
+  /// \brief Clear the current order (without actions)
+  ///
+  void clearOrderAfterCancel() noexcept(true);
+
+  ///
   /// \brief Insert instant actions into the state
   ///
   /// \param instant_actions the new instant actions
