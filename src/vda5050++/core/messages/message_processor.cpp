@@ -56,7 +56,7 @@ void vda5050pp::core::messages::MessageProcessor::receivedInstantActions(
   // END Critical section
 
   // Process  InstantActions
-  for (const auto &action : instant_actions.instantActions) {
+  for (const auto &action : instant_actions.actions) {
     logic.doInstantAction(action);
   }
 

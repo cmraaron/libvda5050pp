@@ -23,7 +23,7 @@ struct InstantActions {
   Header header;
 
   /// List of actions to execute
-  std::vector<Action> instantActions;
+  std::vector<Action> actions;
 };
 }  // namespace vda5050pp
 #endif  // INCLUDE_VDA5050PP_MODEL_INSTANTACTIONS_HPP_

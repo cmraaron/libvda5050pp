@@ -124,7 +124,7 @@ std::list<vda5050pp::Error> ValidationProvider::validateInstantActions(
 
   errors.splice(begin(errors), this->validateHeader(instant_actions.header));
 
-  for (const auto &a : instant_actions.instantActions) {
+  for (const auto &a : instant_actions.actions) {
     errors.splice(begin(errors), this->validateAction(a, true, false, false));
   }
 

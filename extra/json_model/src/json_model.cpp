@@ -398,11 +398,11 @@ void from_json(const json &j, Order &d) {
 
 void to_json(json &j, const InstantActions &d) {
   to_json(j, d.header);
-  j["instantActions"] = d.instantActions;
+  j["actions"] = d.actions;
 }
 void from_json(const json &j, InstantActions &d) {
   from_json(j, d.header);
-  d.instantActions = j.at("instantActions").get<std::vector<Action>>();
+  d.actions = j.at("actions").get<std::vector<Action>>();
 }
 
 void to_json(json &j, const ActionStatus &d) {
