@@ -10,6 +10,7 @@
 
 #include <initializer_list>
 #include <memory>
+#include <mutex>
 #include <set>
 #include <shared_mutex>
 
