@@ -50,7 +50,7 @@ TEST_CASE("core::logic - initPosition behaviour", "[core][logic][action][initPos
     vda5050pp::InstantActions init_position_instant_action;
     init_position_instant_action.header.version = vda5050pp::core::version::current;
     init_position_instant_action.header.timestamp = std::chrono::system_clock::now();
-    init_position_instant_action.instantActions = {init_position};
+    init_position_instant_action.actions = {init_position};
 
     WHEN("The initPosition instant action is received") {
       using namespace std::chrono_literals;

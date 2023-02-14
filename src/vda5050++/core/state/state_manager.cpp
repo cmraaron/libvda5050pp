@@ -264,7 +264,7 @@ void StateManager::insertInstantActions(const vda5050pp::InstantActions &instant
     true) {
   auto lock = this->state_.acquire();
 
-  for (const auto &a : instant_actions.instantActions) {
+  for (const auto &a : instant_actions.actions) {
     this->state_.action_state_by_id[a.actionId] = state_from_action(a);
     this->state_.instant_action_by_id[a.actionId] = a;
   }

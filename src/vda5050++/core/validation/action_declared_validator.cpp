@@ -28,8 +28,8 @@ const auto k_ser_float64_max =
 ///
 const std::set<vda5050pp::interface_agv::agv_description::ActionDeclaration>
     k_control_action_declarations = {
-        {"startPause", {}, {}, {vda5050pp::BlockingType::HARD}, true, false, false},
-        {"stopPause", {}, {}, {vda5050pp::BlockingType::HARD}, true, false, false},
+        {"startPause", {}, {}, {vda5050pp::BlockingType::NONE}, true, false, false},
+        {"stopPause", {}, {}, {vda5050pp::BlockingType::NONE}, true, false, false},
         {"stateRequest", {}, {}, {vda5050pp::BlockingType::NONE}, true, false, false},
         {"logReport",
          {{"reason", std::nullopt, std::nullopt, std::nullopt}},
@@ -38,7 +38,7 @@ const std::set<vda5050pp::interface_agv::agv_description::ActionDeclaration>
          true,
          false,
          false},
-        {"cancelOrder", {}, {}, {vda5050pp::BlockingType::HARD}, true, false, false},
+        {"cancelOrder", {}, {}, {vda5050pp::BlockingType::NONE}, true, false, false},
         {"initPosition",
          {{"x", k_ser_float64_min, k_ser_float64_max, std::nullopt},
           {"y", k_ser_float64_min, k_ser_float64_max, std::nullopt},
