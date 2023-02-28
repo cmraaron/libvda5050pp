@@ -106,9 +106,10 @@ CMake's `find_package` command:
 ```cmake
 find_package(libvda5050++ "1.0" REQUIRED COMPONENTS
   # uncomment the desired components
+  # since mqtt_connector depends on json_model, make sure to import put json_model before
 
-  # mqtt_connector
   # json_model
+  # mqtt_connector
   # logger_utils
 )
 ```
@@ -125,8 +126,8 @@ Your CMakeLists.txt may contain the following lines:
 
 ```cmake
 find_package(libvda5050++ "1.0" REQUIRED COMPONENTS
-  mqtt_connector
   json_model
+  mqtt_connector
 )
 add_executable(MY_APP main.cpp)
 target_link_libraries(MY_APP PUBLIC
