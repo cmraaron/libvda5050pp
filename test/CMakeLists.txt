@@ -1,5 +1,5 @@
 find_package(Threads REQUIRED)
-find_package(Catch2 2.13.10 QUIET)
+find_package(Catch2 2.13.8 QUIET)
 
 if(Catch2_FOUND)
   message(STATUS "Found Catch2 installation.")
@@ -7,7 +7,7 @@ else()
   CPMAddPackage(
     NAME Catch2
     GITHUB_REPOSITORY catchorg/Catch2
-    VERSION 2.13.10
+    VERSION 2.13.8
   )
   list(APPEND CMAKE_MODULE_PATH ${Catch2_SOURCE_DIR}/contrib)
   set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} PARENT_SCOPE)
