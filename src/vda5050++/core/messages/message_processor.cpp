@@ -37,6 +37,8 @@ void vda5050pp::core::messages::MessageProcessor::receivedInstantActions(
   {
     auto lock = std::lock_guard(this->ctrl_mutex_);
 
+    state.insertInstantActions(instant_actions);
+
     // Report errors, if there are any
     if (auto errors = validationProvider.validateInstantActions(instant_actions); !errors.empty()) {
       logger.logWarn(vda5050pp::core::common::logstring("InstantAction #",
@@ -47,11 +49,14 @@ void vda5050pp::core::messages::MessageProcessor::receivedInstantActions(
         state.addError(e);
       }
 
+      for (const auto &a : instant_actions.actions) {
+        state.setActionStatus(a.actionId, vda5050pp::ActionStatus::FAILED);
+      }
+
       messages.requestStateUpdate(UpdateUrgency::k_immediate);
 
       return;
     }
-    state.insertInstantActions(instant_actions);
   }
   // END Critical section
 
