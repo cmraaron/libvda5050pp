@@ -1,8 +1,9 @@
-// Copyright 2021 Open Logistics Foundation
-//
-// Licensed under the Open Logistics License 1.0.
+// Copyright Open Logistics Foundation
+// 
+// Licensed under the Open Logistics Foundation License 1.3.
 // For details on the licensing terms, see the LICENSE file.
-//
+// SPDX-License-Identifier: OLFL-1.3
+// 
 //  This file contatins the state of the libvda5050pp
 //
 
