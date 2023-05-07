@@ -152,10 +152,6 @@ void MqttConnector::setConsumer(
 }
 
 void MqttConnector::queueConnection(const vda5050pp::Connection &connection) noexcept(false) {
-  if (!this->mqtt_client_.is_connected()) {
-    throw NotConnectedError();
-  }
-
   auto msg = std::make_shared<mqtt::message>();
   msg->set_qos(this->k_qos);
   msg->set_topic(this->connection_topic_);
@@ -172,10 +168,6 @@ void MqttConnector::queueConnection(const vda5050pp::Connection &connection) noe
 }
 
 void MqttConnector::queueState(const vda5050pp::State &state) noexcept(false) {
-  if (!this->mqtt_client_.is_connected()) {
-    throw NotConnectedError();
-  }
-
   auto msg = std::make_shared<mqtt::message>();
   msg->set_qos(this->k_qos);
   msg->set_topic(this->state_topic_);
@@ -192,10 +184,6 @@ void MqttConnector::queueState(const vda5050pp::State &state) noexcept(false) {
 
 void MqttConnector::queueVisualization(const vda5050pp::Visualization &visualization) noexcept(
     false) {
-  if (!this->mqtt_client_.is_connected()) {
-    throw NotConnectedError();
-  }
-
   auto msg = std::make_shared<mqtt::message>();
   msg->set_qos(this->k_qos);
   msg->set_topic(this->visualization_topic_);
