@@ -140,7 +140,9 @@ void from_json(const json &j, Velocity &d) {
 void to_json(json &j, const Visualization &d) {
   to_json(j, d.header);
   j["agvPosition"] = d.agvPosition;
-  j["velocity"] = d.velocity;
+  if (d.velocity.vx || d.velocity.vy || d.velocity.omega) {
+    j["velocity"] = d.velocity;
+  }
 }
 void from_json(const json &j, Visualization &d) {
   from_json(j, d.header);
