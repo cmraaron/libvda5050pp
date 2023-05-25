@@ -27,6 +27,14 @@ if(LIBVDA5050PP_SPTN_DEP_LOCAL)
 endif()
 
 
+# use static lib
+set(_PAHO_MQTT_CPP_LIB_NAME paho-mqttpp3)
+option(PAHO_LINK_STATIC "Use static Paho MQTT CPP library" ON)
+if(PAHO_LINK_STATIC)
+  set(_PAHO_MQTT_CPP_LIB_NAME ${_PAHO_MQTT_CPP_LIB_NAME}-static)
+endif()
+
+
 # Compiler flag function
 include(CheckCXXCompilerFlag)
 function(set_compiler_flag flag)
