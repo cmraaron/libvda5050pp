@@ -29,7 +29,7 @@ TEST_CASE("HeaderTargetValidator operates correctly", "[core][validation]") {
         vda5050pp::interface_agv::Handlers<test::TestStepBasedNavigationHandler,
                                            test::TestActionHandler, test::TestPauseResumeHandler>;
     vda5050pp::interface_agv::Handle handle(desc, std::make_shared<test::TestConnector>(),
-                                            Handlers{}, nullptr);
+                                            Handlers{});
 
     validation::HeaderTargetValidator validator(handle);
 

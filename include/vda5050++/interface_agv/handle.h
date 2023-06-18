@@ -146,6 +146,53 @@ public:
     this->messages_.connect();
   }
 
+  template <typename Handlers, typename Connector>
+  explicit Handle(const agv_description::AGVDescription &agv_description,
+                  std::shared_ptr<Connector> connector, Handlers,
+		  std::function<std::shared_ptr<ContinuousNavigationHandler>()> f,
+                  std::shared_ptr<vda5050pp::interface_agv::Logger> logger = nullptr)
+      : shutdown_((Logger::setCurrentLogger(logger),
+                   false)),  // Workaround to initialize the logger before any component
+        create_action_handler_(std::make_shared<typename Handlers::ActionHandler_>),
+        create_pause_resume_handler_(std::make_shared<typename Handlers::PauseResumeHandler_>),
+        agv_description_(agv_description),
+        logic_(*this),
+        validation_provider_(*this),
+        messages_(*this) {
+    using namespace std::chrono_literals;
+    this->state_update_period_ = 30s;
+
+    // Check Action and PauseResume Handler ////////////////////////////////////
+    static_assert(
+        std::is_base_of_v<ActionHandler, typename Handlers::ActionHandler_>,
+        "Handler::ActionHandler must inherit from vda5050pp::interface_agv::ActionHandler");
+    static_assert(std::is_default_constructible_v<typename Handlers::ActionHandler_>,
+                  "Handler::ActionHandler must be default constructible");
+    static_assert(std::is_base_of_v<PauseResumeHandler, typename Handlers::PauseResumeHandler_>,
+                  "Handler::PauseResumeHandler must inherit from "
+                  "vda5050pp::interface_agv::PauseResumeHandler");
+    static_assert(std::is_default_constructible_v<typename Handlers::PauseResumeHandler_>,
+                  "Handler::PauseResumeHandler must be default constructible");
+    this->create_action_handler_ = std::make_shared<typename Handlers::ActionHandler_>;
+    this->create_pause_resume_handler_ = std::make_shared<typename Handlers::PauseResumeHandler_>;
+
+    // Check NavigationHandler /////////////////////////////////////////////////
+    this->create_continuous_navigation_handler_ = f;
+
+    // Check Connector /////////////////////////////////////////////////////////
+    static_assert(std::is_base_of_v<vda5050pp::interface_mc::Connector, Connector>,
+                  "Connector must inherit from "
+                  "vda5050pp::interface_mc::Connector (or "
+                  "vda5050pp::interface_agv::ConnectorPassive");
+    if constexpr (std::is_base_of_v<vda5050pp::interface_mc::ConnectorPassive, Connector>) {
+      this->connector_passive_ = connector;
+      this->connector_ = this->connector_passive_;
+    } else {
+      this->connector_ = connector;
+    }
+
+    this->messages_.connect();
+  }
   ///\brief disallow copy
   Handle(const Handle &handle) = delete;
   ///\brief disallow move
